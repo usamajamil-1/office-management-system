@@ -4,7 +4,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { Pencil,Trash2 } from 'lucide-react'
+import { Pencil, Trash2 } from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
 
 
 const Employees = () => {
@@ -19,7 +20,7 @@ const Employees = () => {
   const deleteEmployee = (index) => {
     const confirm = window.confirm("Confirm")
     if (confirm) {
-      const updated =(employees.filter((_, i) => i !== index))
+      const updated = (employees.filter((_, i) => i !== index))
       Setemployees(updated)
       localStorage.setItem('employees', JSON.stringify(updated))
     }
@@ -72,33 +73,47 @@ const Employees = () => {
 
       </div>
 
-      <div className='overflow-x-auto'>
-        <Table >
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Department</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead> <div className='flex gap-3 '><Trash2 size={20}/> / <Pencil size={20}/> </div>   </TableHead>
-            </TableRow>
-          </TableHeader>
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
+        {employees.map((employee, index) => (
+          <Card key={index} className='p-4'>
+            <CardContent className='p-0'>
 
-          <TableBody>
-            {employees.map((employee, index) => (
-              <TableRow key={employee.name}>
-                <TableCell>{employee.name}</TableCell>
-                <TableCell>{employee.email}</TableCell>
-                <TableCell>{employee.department}</TableCell>
-                <TableCell>{employee.role}</TableCell>
-                <TableCell><Button onClick={() => deleteEmployee(index)}><Trash2 size={12}/></Button><span className='text-xl mx-1'>/</span>
-                  <Button  onClick={() => handleEdit(index, employee)}><Pencil size={12}/> </Button></TableCell>
+              {/* Avatar + Actions */}
+              <div className='flex items-start justify-between mb-3'>
+                <div className='w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-lg font-bold'>
+                  {employee.name?.charAt(0).toUpperCase()}
+                </div>
+                <div className='flex gap-1'>
+                  <Button size='sm' variant='ghost' onClick={() => handleEdit(index, employee)}>
+                    <Pencil size={14} />
+                  </Button>
+                  <Button size='sm' variant='ghost' onClick={() => deleteEmployee(index)}>
+                    <Trash2 size={14} className='text-red-500' />
+                  </Button>
+                </div>
+              </div>
 
-              </TableRow>
-            ))}
-          </TableBody>
+              {/* Info */}
+              <p className='font-semibold text-gray-900'>{employee.name}</p>
+              <p className='text-sm text-gray-400 mb-2'>{employee.department}</p>
 
-        </Table>
+              {/* Role Badge */}
+              <span className='text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-blue-600'>
+                {employee.role}
+              </span>
+
+              {/* Divider */}
+              <div className='border-t border-gray-100 mt-3 pt-3'>
+                <p className='text-xs text-gray-500 truncate'>{employee.email}</p>
+              </div>
+
+            </CardContent>
+          </Card>
+
+        ))}
+
+
+
       </div>
 
     </div>

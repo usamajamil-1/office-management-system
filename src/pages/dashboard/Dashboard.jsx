@@ -1,52 +1,306 @@
 import React from 'react'
 import StatCard from '@/components/common/StatCard'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Bar, BarChart, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
+import { attendanceData } from '@/data/chartData'
+import { User, UserCheck, UserMinus, ClipboardList, Megaphone } from 'lucide-react'
+import { employeeStructureData } from '@/data/EmployeeStructureData'
+import { Navigate, useNavigate } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
+import { jobApplicationsData } from '@/data/JobApplicationsData'
+import { companyPayData } from '@/data/CompanyPayData'
+import { performanceData } from '@/data/performanceData'
+import { interviewData } from '@/data/InterviewSchedule'
+import { Link } from 'react-router-dom'
+import { CheckCircle2 } from 'lucide-react'
+import { UserPlus } from 'lucide-react'
 
 
 const Dashboard = () => {
+
+  const employee = JSON.parse(localStorage.getItem("employees") || "[]")
+  const leaves = JSON.parse(localStorage.getItem("leave") || "[]")
+  const taskList = JSON.parse(localStorage.getItem("tasks") || "[]")
+
+  const navigate = useNavigate()
+
+
+
   return (
     <div className='flex flex-col gap-6'>
+
+      {/* {section-1} */}
+
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3  items-center '>
-        <StatCard title={"Total Employee"} value={50} />
-        <StatCard title={"Present Today"} value={40} />
-        <StatCard title={"On leave"} value={10} />
-        <StatCard title={"Pending Tasks"} value={5} />
+        <StatCard title="Total Employees"
+          value={240}
+          icon={User}
+          iconBg="bg-blue-50"
+          iconColor="text-blue-500"
+          trend={5.2}
+        />
+
+        <StatCard title={"Present Today"} value={40} icon={UserCheck} trend={3.1} iconBg="bg-green-50" iconColor="text-green-500" />
+        <StatCard title={"On leave"} value={10} icon={UserMinus} trend={-1} iconBg="bg-amber-50" iconColor="text-amber-500" />
+        <StatCard title={"Pending Tasks"} value={5} icon={ClipboardList} iconBg="bg-purple-50" iconColor="text-purple-500" />
       </div>
 
-      <h1 className='text-lg font-semibold mt-6 '>Recent Activity</h1>
-      <div className='overflow-x-auto'>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Action</TableHead>
-              <TableHead>Time</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              <TableCell>Ali </TableCell>
-              <TableCell>Checked In </TableCell>
-              <TableCell>9:00 AM </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Ahmad </TableCell>
-              <TableCell>Checked Out </TableCell>
-              <TableCell>5:00 PM </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Haseeb </TableCell>
-              <TableCell>Checked In </TableCell>
-              <TableCell>11:00 AM </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>Tanveer </TableCell>
-              <TableCell>Checked Out </TableCell>
-              <TableCell>4:00 PM </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+
+      {/* {section-2} */}
+
+      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+
+        <div className='bg-white rounded-lg p-4 shadow-sm'>
+          <h2 className='text-lg font-semibold mb-4'>Attendance Overview</h2>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={attendanceData}>
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="present" fill="#316AFF" />
+              <Bar dataKey="absent" fill="#FF4444" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div className='bg-white rounded-lg p-4 shadow-sm'>
+          <h2 className='text-lg font-semibold mb-4'>Employee Structure</h2>
+          <ResponsiveContainer width="100%" height={200}>
+            <PieChart>
+              <Pie data={employeeStructureData} dataKey='value' cx="50%" cy="50%" innerRadius={60} outerRadius={80}>
+                {employeeStructureData.map((entry, index) => (
+                  <Cell key={index} fill={entry.color} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <text x="50%" y="45%" textAnchor="middle" className="text-sm font-bold fill-gray-900">1206</text>
+              <text x="50%" y="57%" textAnchor="middle" className="text-xs fill-gray-500">Employees</text>
+            </PieChart>
+          </ResponsiveContainer>
+          <ul className='mt-3 '>
+            {employeeStructureData.map((item, index) => (
+              <li key={index} className='flex items-center gap-2 text-sm'>
+                <div className='flex items-center gap-2'>
+                  <span className='w-2.5 h-2.5 rounded-full' style={{ background: item.color }}></span>
+                  <span className='text-gray-600'>{item.name}</span>
+                </div>
+                <span className='font-semibold text-gray-800'>{item.value}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
       </div>
+
+
+      {/* {section-3} */}
+
+      <div className='bg-white rounded-lg p-4 shadow-sm flex flex-wrap justify-between items-center'>
+        <div className='flex flex-wrap items-center gap-3'>
+          <div className='bg-blue-100 p-2 rounded-lg'>
+            <Megaphone size={22} className='text-blue-600' />
+          </div>
+          <div>
+            <h2 className='text-lg font-semibold mb-1'>Create Announcement</h2>
+            <p className='text-sm font-light'>Make an announcement to your employees quickly</p>
+          </div>
+        </div>
+        <Button onClick={() => navigate('/addAnnouncements')} >
+          Create Now
+        </Button>
+      </div>
+
+
+      {/* {section-4} */}
+
+      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+
+        {/* {job-application} */}
+
+        <div className='bg-white shadow-sm rounded-lg p-4'>
+
+          <div className='flex items-center justify-between'>
+            <h2 className='font-medium'>Recent Job Applications</h2>
+            <Link to='/recruitment' className='text-sm text-blue-600'>View All</Link>
+          </div>
+
+          <ul>
+            {jobApplicationsData.map((app) => (
+              <li key={app.id} >
+                <div className='flex items-center justify-between'>
+                  <div className='flex gap-3 mt-3 items-center'>
+                    <div className={` text-sm text-center rounded-full p-2 ${app.color}`}>{app.initials}</div>
+                    <div className='flex flex-col'>
+                      <span className='font-medium'>{app.name}</span> <span className='font-light text-sm'>{app.role}</span>
+                    </div>
+                  </div>
+                  <div className={`text-xs font-semibold px-2 py-0.5 rounded-full
+                    ${app.status === 'Pending' ? 'bg-amber-50 text-amber-600' : ''}
+                    ${app.status === 'Approved' ? 'bg-green-50 text-green-600' : ''}
+                    ${app.status === 'Rejected' ? 'bg-red-50 text-red-500' : ''}`}>
+                    {app.status}
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+        </div>
+
+        {/* {Company pay data} */}
+
+        <div className='bg-white rounded-lg p-4 shadow-sm'>
+          <h2 className='text-lg font-semibold mb-4'>Company Pay</h2>
+          <ResponsiveContainer width="100%" height={200}>
+            <PieChart>
+              <Pie data={companyPayData} dataKey='value' cx="50%" cy="50%" innerRadius={60} outerRadius={80}>
+                {companyPayData.map((entry, index) => (
+                  <Cell key={index} fill={entry.color} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <text x="50%" y="45%" textAnchor="middle" className="text-sm font-bold fill-gray-900">1206</text>
+              <text x="50%" y="57%" textAnchor="middle" className="text-xs fill-gray-500">Total</text>
+            </PieChart>
+          </ResponsiveContainer>
+          <ul className='mt-3 '>
+            {companyPayData.map((item, index) => (
+              <li key={index} className='flex items-center gap-2 text-sm'>
+                <div className='flex items-center gap-2'>
+                  <span className='w-2.5 h-2.5 rounded-full' style={{ background: item.color }}></span>
+                  <span className='text-gray-600'>{item.name}</span>
+                </div>
+                <span className='font-semibold text-gray-800'>{item.value}%</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+      </div>
+
+      {/* section 5 */}
+
+
+      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+
+        {/* Task update */}
+
+        <div className='bg-white rounded-lg p-4 shadow-sm'>
+          <div className='flex items-center justify-between mb-4'>
+            <h2 className='text-lg font-semibold'>Task Update</h2>
+            <Link to='/tasks' className='text-sm text-blue-600'>View All</Link>
+          </div>
+          <ul className='space-y-3'>
+            {taskList.slice(0, 5).map((task, index) => (
+              <li className='flex items-center justify-between'>
+                <div className='flex items-center gap-2'>
+                  <CheckCircle2 size={16} className={task.status === 'completed' ? 'text-green-500' : 'text-gray-400'} />
+                  <span className={`text-sm ${task.status === 'completed' ? 'line-through text-gray-300' : 'text-gray-600'}`}>
+                    {task.title}
+                  </span>
+                </div>
+                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full
+                 ${task.status === 'completed' ? 'bg-green-50 text-green-600' : ''}
+                 ${task.status === 'inProgress' ? 'bg-yellow-50 text-yellow-600' : ''}
+                 ${task.status === 'pending' ? 'bg-red-50 text-red-500' : ''} `}>
+                  {task.status}
+                </span>
+              </li>
+            ))}
+          </ul>
+          {taskList.length === 0 && (
+            <p className='text-sm text-gray-400 text-center mt-4'>No tasks found</p>
+          )}
+        </div>
+
+        {/* Employee Performance */}
+
+        {/* Employee Performance */}
+        <div className='bg-white rounded-lg p-4 shadow-sm'>
+          <div className='flex items-center justify-between mb-4'>
+            <h2 className='text-lg font-semibold'>Employee Performance</h2>
+            <span className='text-xs text-gray-400'>Last Month</span>
+          </div>
+          <ul className='space-y-4'>
+            {performanceData.map((emp, index) => (
+              <li key={index}>
+
+                {/* Avatar + Name + Score */}
+                <div className='flex items-center justify-between mb-1'>
+                  <div className='flex items-center gap-2'>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${emp.color}`}>
+                      {emp.initials}
+                    </div>
+                    <div>
+                      <p className='text-sm font-semibold text-gray-800'>{emp.name}</p>
+                      <p className='text-xs text-gray-400'>{emp.role}</p>
+                    </div>
+                  </div>
+                  <span className='text-sm font-bold text-gray-700'>{emp.score}%</span>
+                </div>
+
+                {/* Progress Bar */}
+                <div className='h-1.5 bg-gray-100 rounded-full overflow-hidden'>
+                  <div
+                    className='h-full rounded-full bg-blue-500'
+                    style={{ width: `${emp.score}%` }}
+                  />
+                </div>
+
+              </li>
+            ))}
+          </ul>
+        </div>
+
+      </div>
+
+      {/* {section 6} */}
+
+      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+
+        {/* {Interview Schedule} */}
+
+        <div className='bg-white rounded-lg p-4 shadow-sm'>
+          <div className='flex items-center justify-between mb-4'>
+            <h2 className='text-lg font-semibold'>Interview Schedule</h2>
+            <span className='text-xs text-gray-400'>Today</span>
+          </div>
+          <ul className='space-y-3'>
+            {interviewData.map((item, index) => (
+              <li key={index} className='flex items-center justify-between'>
+                <div className='flex items-center gap-3'>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${item.color}`}>
+                    {item.initials}
+                  </div>
+                  <div>
+                    <p className='text-sm font-semibold text-gray-800'>{item.name}</p>
+                    <p className='text-xs text-gray-400'>{item.role}</p>
+                  </div>
+                </div>
+                <span className='text-xs font-semibold text-gray-500'>{item.time}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Add Employee Banner */}
+
+        <div className='bg-white rounded-lg p-4 shadow-sm flex flex-col gap-3 justify-center items-center'>
+          <div className='flex items-center gap-3'>
+            <div className='bg-green-100 p-2 rounded-lg'>
+              <UserPlus size={22} className='text-green-600' />
+            </div>
+            <div>
+              <h2 className='text-lg font-semibold text-gray-800 mb-1'>Add Employee</h2>
+              <p className='text-sm text-gray-600'>Add a new member to your team</p>
+            </div>
+          </div>
+          <Button onClick={() => navigate('/addEmployee')} > Add Now </Button>
+        </div>
+
+      </div>
+
+
 
     </div>
   )

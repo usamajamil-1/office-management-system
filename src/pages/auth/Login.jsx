@@ -21,6 +21,7 @@ const Login = () => {
 
     localStorage.setItem('isLoggedIn', 'true')
     localStorage.setItem("role", foundUser.role)
+    localStorage.setItem('userEmail', data.email)
     navigate('/dashboard')
   }
  
