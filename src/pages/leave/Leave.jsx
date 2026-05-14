@@ -28,8 +28,8 @@ const Leave = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {leave.map((leave,index) => (
-            <TableRow key={index}>
+          {leave.map((leave) => (
+            <TableRow key={id}>
               <TableCell>{leave.name}</TableCell>
               <TableCell>{leave.leaveType}</TableCell>
               <TableCell>{leave.fromDate}</TableCell>

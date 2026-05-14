@@ -14,7 +14,7 @@ const AddTask = () => {
   const onSubmit = (data) => {
 
     const existing = JSON.parse(localStorage.getItem('tasks') || '[]')
-    const newTask = { ...data }
+    const newTask = { ...data,id : Date.now() }
     localStorage.setItem('tasks', JSON.stringify([...existing, newTask]))
 
     navigate('/tasks')

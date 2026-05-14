@@ -16,12 +16,12 @@ const ApplyLeave = () => {
 
 
         const existing = JSON.parse(localStorage.getItem('leave') || '[]')
-        const newLeave = { ...data, status: "pending" }
+        const newLeave = { ...data,id:Date.now(), status: "pending" }
         localStorage.setItem('leave', JSON.stringify([...existing, newLeave]))
 
         navigate('/leave')
 
-    }
+    } 
 
 
 

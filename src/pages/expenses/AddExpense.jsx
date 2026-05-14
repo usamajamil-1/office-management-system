@@ -14,7 +14,7 @@ const AddExpense = () => {
   const onSubmit = (data) => {
 
     const existing = JSON.parse(localStorage.getItem('expenses') || '[]')
-    const newTask = { ...data }
+    const newTask = { ...data, id:Date.now()}
     localStorage.setItem('expenses', JSON.stringify([...existing, newTask]))
 
     navigate('/expenses')

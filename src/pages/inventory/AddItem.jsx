@@ -15,7 +15,7 @@ const AddItem = () => {
     const onSubmit = (data) => {
 
         const existing = JSON.parse(localStorage.getItem('inventory') || '[]')
-        const newInventory = { ...data }
+        const newInventory = { ...data , id: Date.now()}
         localStorage.setItem('inventory', JSON.stringify([...existing, newInventory]))
 
         console.log(data)

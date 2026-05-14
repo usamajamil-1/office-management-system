@@ -17,10 +17,10 @@ const Employees = () => {
   })
 
 
-  const deleteEmployee = (index) => {
+  const deleteEmployee = (id) => {
     const confirm = window.confirm("Confirm")
     if (confirm) {
-      const updated = (employees.filter((_, i) => i !== index))
+      const updated = (employees.filter((_, id) => id !== id))
       Setemployees(updated)
       localStorage.setItem('employees', JSON.stringify(updated))
     }
@@ -30,20 +30,14 @@ const Employees = () => {
   const [editEmployee, setEditEmployee] = useState(null)
 
 
-  const handleEdit = (index, employee) => {
-    setEditEmployee({
-      index: index,
-      name: employees[index].name,
-      email: employees[index].email,
-      department: employees[index].department,
-      role: employees[index].role
-    })
+  const handleEdit = (employee) => {
+    setEditEmployee({ ...employee })
   }
 
 
   const saveEdit = () => {
-    const updated = employees.map((emp, i) =>
-      i === editEmployee.index ? editEmployee : emp
+    const updated = employees.map((emp) =>
+      emp.id === editEmployee.id ? editEmployee : emp
     )
     Setemployees(updated)
     setEditEmployee(null)
@@ -84,10 +78,10 @@ const Employees = () => {
                   {employee.name?.charAt(0).toUpperCase()}
                 </div>
                 <div className='flex gap-1'>
-                  <Button size='sm' variant='ghost' onClick={() => handleEdit(index, employee)}>
+                  <Button size='sm' variant='ghost' onClick={() => handleEdit(employee)}>
                     <Pencil size={14} />
                   </Button>
-                  <Button size='sm' variant='ghost' onClick={() => deleteEmployee(index)}>
+                  <Button size='sm' variant='ghost' onClick={() => deleteEmployee(employee.id)}>
                     <Trash2 size={14} className='text-red-500' />
                   </Button>
                 </div>

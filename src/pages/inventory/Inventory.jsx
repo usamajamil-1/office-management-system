@@ -27,8 +27,8 @@ const Inventory = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {inventory.map((inventory,index) => (
-                <TableRow key={index}>
+              {inventory.map((inventory,id) => (
+                <TableRow key={id}>
                   <TableCell>{inventory.itemName}</TableCell>
                   <TableCell>{inventory.Category}</TableCell>
                   <TableCell>{inventory.quantity}</TableCell>

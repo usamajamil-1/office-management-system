@@ -12,7 +12,7 @@ const AddEmployee = () => {
 
   const onSubmit = (data) => {
     const existing = JSON.parse(localStorage.getItem('employees') || '[]')
-    const newEmployee = { ...data }
+    const newEmployee = { ...data , id: Date.now() }
     localStorage.setItem('employees', JSON.stringify([...existing, newEmployee]))
 
    navigate('/employees') 
