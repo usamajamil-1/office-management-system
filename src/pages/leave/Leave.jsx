@@ -1,6 +1,8 @@
 import React from 'react'
 import { useState } from 'react'
 import { Table, TableBody, TableRow, TableHead, TableCell, TableHeader } from '@/components/ui/table'
+import { Trash2 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 const Leave = () => {
 
@@ -15,6 +17,13 @@ const Leave = () => {
     return "bg-yellow-100 text-yellow-700"
   }
 
+  const deleteLeave = (id)=>{
+    const update = leave.filter((l)=> l.id!==id)
+    setLeave(update)
+    localStorage.setItem('leave', JSON.stringify(update))
+
+  }
+
   return (
     <div className='overflow-x-auto'>
       <Table>
@@ -25,11 +34,12 @@ const Leave = () => {
             <TableHead>From</TableHead>
             <TableHead>To</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {leave.map((leave) => (
-            <TableRow key={id}>
+            <TableRow key={leave.id}>
               <TableCell>{leave.name}</TableCell>
               <TableCell>{leave.leaveType}</TableCell>
               <TableCell>{leave.fromDate}</TableCell>
@@ -38,6 +48,11 @@ const Leave = () => {
                 <span className={`${getStatusStyle(leave.status)} rounded-full text-sm px-2 py-1`}>
                   {leave.status}
                 </span>
+              </TableCell>
+              <TableCell>
+                <Button variant='ghost' onClick={() => deleteLeave(leave.id)}>
+                   <Trash2 size={14} className='text-red-500' /> 
+                   </Button>
               </TableCell>
             </TableRow>
           ))}
