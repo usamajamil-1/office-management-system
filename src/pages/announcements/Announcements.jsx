@@ -49,7 +49,7 @@ const Announcements = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {announcements.map((announcements, index) => (
+          {announcements.map((announcements) => (
             <TableRow key={announcements.id}>
               <TableCell>{announcements.title}</TableCell>
               <TableCell>{announcements.message}</TableCell>

@@ -12,7 +12,7 @@ const AddAnnouncements = () => {
 
     const onSubmit=(data)=>{
         const existing = JSON.parse(localStorage.getItem('announcements') || '[]')
-        const newAnnouncement = {...data,id: Date.now()}
+        const newAnnouncement = {...data, id: Date.now()}
         localStorage.setItem('announcements',JSON.stringify([...existing,newAnnouncement]))
 
         navigate('/announcements')
