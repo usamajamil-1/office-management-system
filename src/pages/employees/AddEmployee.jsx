@@ -7,8 +7,11 @@ import { Navigate, useNavigate } from 'react-router-dom'
 
 const AddEmployee = () => {
 
-  const { register, handleSubmit, formState: { errors } } = useForm()
+const { register, handleSubmit, formState: { errors } } = useForm()
   const navigate = useNavigate()
+ 
+
+ 
 
   const onSubmit = (data) => {
     const existing = JSON.parse(localStorage.getItem('employees') || '[]')
@@ -40,9 +43,39 @@ const AddEmployee = () => {
 
         ))}
       </select>
+
+      <Input {...register("phone", { required: "please add phone number" })} placeholder="Phone Number" />
+      {errors.phone && <p className='text-sm text-red-500'>{errors.phone.message}</p>}
+
+      <Input type="number" {...register("salary", { required: "please add salary" })} placeholder="Salary" />
+      {errors.salary && <p className='text-sm text-red-500'>{errors.salary.message}</p>}
+
+      <Input
+        type="date"
+        {...register("joiningDate", { required: "please add joining date" })}
+      />
+      {errors.joiningDate && <p className='text-sm text-red-500'>{errors.joiningDate.message}</p>}
+
+      <Input {...register("address", { required: "please add address" })} placeholder="Address" />
+      {errors.address && <p className='text-sm text-red-500'>{errors.address.message}</p>}
+
+      <Input
+        {...register("cnic", {
+          required: "please add CNIC",
+          pattern: {
+            value: /^\d{5}-\d{7}-\d{1}$/,
+            message: "CNIC format should be 99999-9999999-9"
+          }
+        })}
+        placeholder="CNIC (99999-9999999-9)"
+      />
+      {errors.cnic && <p className='text-sm text-red-500'>{errors.cnic.message}</p>}
+
+     
+
       <Button onClick={handleSubmit(onSubmit)}>Submit</Button>
     </div>
   )
-}
+}     
 
 export default AddEmployee

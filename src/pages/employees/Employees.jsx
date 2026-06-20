@@ -34,6 +34,8 @@ const Employees = () => {
     setEditEmployee({ ...employee })
   }
 
+ 
+
 
   const saveEdit = () => {
     const updated = employees.map((emp) =>
@@ -61,6 +63,12 @@ const Employees = () => {
             <Input placeholder="Email" value={editEmployee?.email || ""} onChange={(e) => setEditEmployee({ ...editEmployee, email: e.target.value })} />
             <Input placeholder="Department" value={editEmployee?.department || ""} onChange={(e) => setEditEmployee({ ...editEmployee, department: e.target.value })} />
             <Input placeholder="role" value={editEmployee?.role || ""} onChange={(e) => setEditEmployee({ ...editEmployee, role: e.target.value })} />
+            <Input placeholder="Phone Number" value={editEmployee?.phone || ""} onChange={(e) => setEditEmployee({ ...editEmployee, phone: e.target.value })} />
+            <Input type="number" placeholder="Salary" value={editEmployee?.salary || ""} onChange={(e) => setEditEmployee({ ...editEmployee, salary: e.target.value })} />
+            <Input type="date" placeholder="Joining Date" value={editEmployee?.joiningDate || ""} onChange={(e) => setEditEmployee({ ...editEmployee, joiningDate: e.target.value })} />
+            <Input placeholder="Address" value={editEmployee?.address || ""} onChange={(e) => setEditEmployee({ ...editEmployee, address: e.target.value })} />
+            <Input placeholder="CNIC (99999-9999999-9)" value={editEmployee?.cnic || ""} onChange={(e) => setEditEmployee({ ...editEmployee, cnic: e.target.value })} />
+            
             <Button onClick={saveEdit} >Save</Button>
           </DialogContent>
         </Dialog>
@@ -97,8 +105,13 @@ const Employees = () => {
               </span>
 
               {/* Divider */}
-              <div className='border-t border-gray-100 mt-3 pt-3'>
+              <div className='border-t border-gray-100 mt-3 pt-3 space-y-1'>
                 <p className='text-xs text-gray-500 truncate'>{employee.email}</p>
+                <p className='text-xs text-gray-500 truncate'>{employee.phone}</p>
+                <p className='text-xs text-gray-500 truncate'>CNIC: {employee.cnic}</p>
+                <p className='text-xs text-gray-500 truncate'>Joined: {employee.joiningDate}</p>
+                <p className='text-xs text-gray-500 truncate'>Salary: {employee.salary}</p>
+                <p className='text-xs text-gray-500 truncate'>{employee.address}</p>
               </div>
 
             </CardContent>
