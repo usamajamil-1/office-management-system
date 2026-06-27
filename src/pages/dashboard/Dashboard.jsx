@@ -14,6 +14,7 @@ import { interviewData } from '@/data/InterviewSchedule'
 import { Link } from 'react-router-dom'
 import { CheckCircle2 } from 'lucide-react'
 import { UserPlus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 
 
 const Dashboard = () => {
@@ -106,7 +107,7 @@ const Dashboard = () => {
           </div>
         </div>
         <Button onClick={() => navigate('/addAnnouncements')} >
-          Create Now
+         <Plus size={16} /> Create Now
         </Button>
       </div>
 
