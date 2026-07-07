@@ -4,32 +4,43 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { users } from '@/data/user'
-
 
 const Login = () => {
 
   const navigate = useNavigate()
+  const { register, handleSubmit, formState: { errors } } = useForm()
 
-  const onSubmit = (data) => {
-    const foundUser = users.find(u=> u.email===data.email && u.password===data.password )
+  const onSubmit = async (data) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
 
-      if (!foundUser) {
-    alert("Email or password is wrong!")
-    return
+      const result = await response.json()
+
+      if (!response.ok) {
+        alert(result.message)
+        return
+      }
+
+      // Token aur user info save karo
+      localStorage.setItem('token', result.token)
+      localStorage.setItem('role', result.user.role)
+      localStorage.setItem('userEmail', result.user.email)
+
+      navigate('/dashboard')
+
+    } catch (error) {
+      alert('Server se connection nahi ho raha!')
+    }
   }
-
-    localStorage.setItem('isLoggedIn', 'true')
-    localStorage.setItem("role", foundUser.role)
-    localStorage.setItem('userEmail', data.email)
-    navigate('/dashboard')
-  }
- 
-  const {register, handleSubmit, formState:{errors} } = useForm()
 
   return (
     <div className='flex justify-center items-center min-h-screen bg-gray-50'>
-
       <Card className={"w-full md:w-96"}>
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
@@ -39,18 +50,12 @@ const Login = () => {
         </CardHeader>
         <CardContent className={"flex flex-col gap-4"}>
           <Input {...register("email")} type='email' placeholder='email' />
-          <Input  {...register("password")} type='password' placeholder='password' />
-          
+          <Input {...register("password")} type='password' placeholder='password' />
           <Button onClick={handleSubmit(onSubmit)}>Login</Button>
         </CardContent>
       </Card>
-
     </div>
-
-
   )
 }
 
 export default Login
-
-

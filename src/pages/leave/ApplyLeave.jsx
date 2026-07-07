@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 
@@ -12,16 +11,33 @@ const ApplyLeave = () => {
 
     const navigate = useNavigate()
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
+    try {
+      const token = localStorage.getItem('token')
 
+      const response = await fetch('http://localhost:5000/api/leave', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': token
+        },
+        body: JSON.stringify(data)
+      })
 
-        const existing = JSON.parse(localStorage.getItem('leave') || '[]')
-        const newLeave = { ...data,id:Date.now(), status: "pending" }
-        localStorage.setItem('leave', JSON.stringify([...existing, newLeave]))
+      const result = await response.json()
 
-        navigate('/leave')
+      if (!response.ok) {
+        alert(result.message)
+        return
+      }
 
-    } 
+      navigate('/leave')
+
+    } catch (error) {
+      console.log(error)
+      alert('Server se connection nahi!')
+    }
+  } 
 
 
 

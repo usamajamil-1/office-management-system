@@ -9,7 +9,6 @@ import Payroll from './pages/payroll/Payroll'
 import Tasks from './pages/tasks/Tasks'
 import AttendanceHistory from './pages/attendance/AttendanceHistory'
 import ApplyLeave from './pages/leave/ApplyLeave'
-import PayrollDetail from './pages/payroll/PayrollDetail'
 import ProtectedRoute from './components/common/ProtectedRoute'
 import AddTask from './pages/tasks/AddTask'
 import Expenses from './pages/expenses/Expenses'
@@ -24,6 +23,10 @@ import Profile from './pages/profile/Profile'
 import AccountSettings from './pages/profile/AccountSettings'
 import MyTasks from './pages/tasks/MyTasks'
 import Recruitment from './pages/recruitment/Recruitment'
+import AddPayroll from './pages/payroll/AddPayroll'
+import AddApplication from './pages/recruitment/AddApplication'
+import AddVacancy from './pages/recruitment/AddVacancy'
+import AddInterview from './pages/recruitment/AddInterview'
 
 
 
@@ -44,7 +47,6 @@ function App() {
         <Route path="/payroll" element={<ProtectedRoute allowedRoles={['admin', 'hr']}> <MainLayout>     <Payroll />     </MainLayout> </ProtectedRoute>} />
         <Route path="/tasks" element={<ProtectedRoute allowedRoles={['admin', 'hr', 'employee']}> <MainLayout>       <Tasks />       </MainLayout> </ProtectedRoute>} />
         <Route path='/attendanceHistory' element={<ProtectedRoute allowedRoles={['admin', 'hr', 'employee']}> <MainLayout> <AttendanceHistory /> </MainLayout> </ProtectedRoute>}></Route>
-        <Route path='/payrollDetail' element={<ProtectedRoute allowedRoles={['admin', 'hr']}> <MainLayout> <PayrollDetail /> </MainLayout> </ProtectedRoute>}></Route>
         <Route path='/addTask' element={<ProtectedRoute allowedRoles={['admin', 'hr', 'employee']}> <MainLayout> <AddTask /> </MainLayout> </ProtectedRoute>}></Route>
         <Route path='/expenses' element={<ProtectedRoute allowedRoles={['admin', 'accountant']}> <MainLayout> <Expenses /> </MainLayout> </ProtectedRoute>}></Route>
         <Route path='/addExpense' element={<ProtectedRoute allowedRoles={['admin', 'accountant']}> <MainLayout> <AddExpense /> </MainLayout> </ProtectedRoute>}></Route>
@@ -53,11 +55,15 @@ function App() {
         <Route path='/reports' element={<ProtectedRoute allowedRoles={['admin', 'accountant']}> <MainLayout> <Reports /> </MainLayout> </ProtectedRoute>}></Route>
         <Route path='/announcements' element={<ProtectedRoute allowedRoles={['admin', 'hr', 'employee', 'accountant']}> <MainLayout> <Announcements /> </MainLayout> </ProtectedRoute>}></Route>
         <Route path='/addAnnouncements' element={<ProtectedRoute allowedRoles={['admin', 'hr', 'employee', 'accountant']}> <MainLayout> <AddAnnouncements /> </MainLayout> </ProtectedRoute>}></Route>
-        <Route path='/addEmployee' element={<ProtectedRoute allowedRoles={['admin', 'hr']}> <MainLayout> <AddEmployee /> </MainLayout> </ProtectedRoute>}></Route>
+        <Route path='/addEmployee' element={<ProtectedRoute allowedRoles={['admin', 'hr','employee']}> <MainLayout> <AddEmployee /> </MainLayout> </ProtectedRoute>}></Route>
         <Route path='/profile' element={<ProtectedRoute allowedRoles={['admin', 'hr', 'employee']}> <MainLayout> <Profile /> </MainLayout> </ProtectedRoute>}></Route>
         <Route path='/setting' element={<ProtectedRoute allowedRoles={['admin', 'hr']}> <MainLayout> <AccountSettings /> </MainLayout> </ProtectedRoute>}></Route>
         <Route path='/myTasks' element={<ProtectedRoute allowedRoles={['admin', 'hr', 'employee']}> <MainLayout> <MyTasks /> </MainLayout> </ProtectedRoute>}></Route>
         <Route path='/recruitment' element={<ProtectedRoute allowedRoles={['admin', 'hr']}> <MainLayout> <Recruitment /> </MainLayout> </ProtectedRoute>}></Route>
+        <Route path='/addPayroll' element={<ProtectedRoute allowedRoles={['admin', 'hr']}> <MainLayout> <AddPayroll /> </MainLayout> </ProtectedRoute>}></Route>
+        <Route path='/addApplication' element={<ProtectedRoute allowedRoles={['admin', 'hr']}> <MainLayout> <AddApplication /> </MainLayout> </ProtectedRoute>}></Route>
+        <Route path='/addVacancy' element={<ProtectedRoute allowedRoles={['admin', 'hr']}> <MainLayout> <AddVacancy /> </MainLayout> </ProtectedRoute>}></Route>
+        <Route path='/addInterview' element={<ProtectedRoute allowedRoles={['admin', 'hr']}> <MainLayout> <AddInterview /> </MainLayout> </ProtectedRoute>}></Route>
 
       </Routes>
     </BrowserRouter>

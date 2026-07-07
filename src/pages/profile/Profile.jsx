@@ -1,39 +1,55 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
-import { Mail, Phone, Building2, Briefcase, Calendar, Clock } from 'lucide-react'
-
+import { Mail, Phone, Building2, Briefcase, MapPin, Clock } from 'lucide-react'
 
 const Profile = () => {
 
-  const email = localStorage.getItem('userEmail') || 'admin@gmail.com'
-  const role = localStorage.getItem('role') || 'admin'
-  const name = email.split('@')[0]  // email se naam nikalo
+  const [employee, setEmployee] = useState(null)
+  const token = localStorage.getItem('token')
+
+  const fetchProfile = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/profile', {
+        method: 'GET',
+        headers: { 'authorization': token }
+      })
+      const result = await response.json()
+      setEmployee(result.employee)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    fetchProfile()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  if (!employee) {
+    return <div className='text-center text-gray-400 mt-10'>Loading...</div>
+  }
 
   const info = [
-    { icon: Mail, label: 'Email', value: email },
-    { icon: Briefcase, label: 'Role', value: role },
-    { icon: Building2, label: 'Department', value: 'Engineering' },
-    { icon: Phone, label: 'Phone', value: '+92 300 1234567' },
-    { icon: Calendar, label: 'Date of Birth', value: '15 March 1995' },
-    { icon: Clock, label: 'Date of Joining', value: '01 January 2022' },
+    { icon: Mail, label: 'Email', value: employee.email },
+    { icon: Briefcase, label: 'Role', value: employee.role },
+    { icon: Building2, label: 'Department', value: employee.department },
+    { icon: Phone, label: 'Phone', value: employee.phone },
+    { icon: MapPin, label: 'Address', value: employee.address },
+    { icon: Clock, label: 'Date of Joining', value: employee.joiningDate?.split('T')[0] },
   ]
 
-
-
-
   return (
-
     <div className='max-w-2xl mx-auto'>
 
       {/* Avatar + Name */}
       <Card className='p-6 mb-4'>
         <CardContent className='p-0 flex items-center gap-5'>
           <div className='w-20 h-20 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-3xl font-bold'>
-            {name.charAt(0).toUpperCase()}
+            {employee.name?.charAt(0).toUpperCase()}
           </div>
           <div>
-            <h1 className='text-xl font-bold text-gray-900 capitalize'>{name}</h1>
-            <p className='text-sm text-gray-400 capitalize'>{role}</p>
+            <h1 className='text-xl font-bold text-gray-900 capitalize'>{employee.name}</h1>
+            <p className='text-sm text-gray-400 capitalize'>{employee.role}</p>
           </div>
         </CardContent>
       </Card>
@@ -57,8 +73,6 @@ const Profile = () => {
       </Card>
 
     </div>
-
-
   )
 }
 

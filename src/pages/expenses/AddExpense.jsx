@@ -1,5 +1,3 @@
-import React from 'react'
-import { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
@@ -7,40 +5,58 @@ import { useForm } from 'react-hook-form'
 
 const AddExpense = () => {
 
-  const { register, handleSubmit, formState: errors } = useForm()
-
+  const { register, handleSubmit, formState: { errors } } = useForm()
   const navigate = useNavigate()
+  const token = localStorage.getItem('token')
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/expense', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': token
+        },
+        body: JSON.stringify(data)
+      })
 
-    const existing = JSON.parse(localStorage.getItem('expenses') || '[]')
-    const newTask = { ...data, id:Date.now()}
-    localStorage.setItem('expenses', JSON.stringify([...existing, newTask]))
+      const result = await response.json()
 
-    navigate('/expenses')
+      if (!response.ok) {
+        alert(result.message)
+        return
+      }
+
+      navigate('/expenses')
+
+    } catch (error) {
+      console.log(error)
+      alert('Server se connection nahi!')
+    }
   }
+
   return (
     <div>
-      <h1 className='mb-2 font-bold '>Add Tasks</h1>
+      <h1 className='mb-2 font-bold '>Add Expense</h1>
       <div className='flex flex-col gap-4 max-w-md'>
         <select {...register("category", { required: "please select category" })} className='border rounded-xl p-2 text-gray-900 text-sm font-light w-full'>
-          <option value={""} >Category</option>
-          <option value={'utilities'} >Utilities</option>
-          <option value={'salaries'} >Salaries</option>
-          <option value={'rent'} >Rent</option>
+          <option value={""}>Category</option>
+          <option value={'utilities'}>Utilities</option>
+          <option value={'salaries'}>Salaries</option>
+          <option value={'rent'}>Rent</option>
         </select>
-        {errors.catergory && <p className='text-sm text-red-500'>{errors.category.message}</p>}
+        {errors.category && <p className='text-sm text-red-500'>{errors.category.message}</p>}
 
-        <Input {...register("amount", { required: "please fill the field" })} placeholder='Amount' />
+        <Input type='number' {...register("amount", { required: "please fill the field" })} placeholder='Amount' />
         {errors.amount && <p className='text-sm text-red-500'>{errors.amount.message}</p>}
 
         <Input {...register("date", { required: "please fill the field" })} type={'date'} placeholder='Date' />
         {errors.date && <p className='text-sm text-red-500'>{errors.date.message}</p>}
 
         <select {...register("status", { required: "please fill the field" })} className='border rounded-xl p-2 text-gray-900 text-sm font-light w-full'>
-          <option value={""} >Status</option>
-          <option value={'paid'} >Paid</option>
-          <option value={'unPaid'} >UnPaid</option>
+          <option value={""}>Status</option>
+          <option value={'paid'}>Paid</option>
+          <option value={'unPaid'}>UnPaid</option>
         </select>
         {errors.status && <p className='text-sm text-red-500'>{errors.status.message}</p>}
 

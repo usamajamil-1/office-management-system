@@ -1,4 +1,3 @@
-import React, { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
@@ -7,19 +6,34 @@ import { useForm } from 'react-hook-form'
 const AddTask = () => {
 
   const { register, handleSubmit, formState: { errors } } = useForm()
-
-
   const navigate = useNavigate()
+  const token = localStorage.getItem('token')
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
+    try {
+      const response = await fetch('http://localhost:5000/api/task', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': token
+        },
+        body: JSON.stringify(data)
+      })
 
-    const existing = JSON.parse(localStorage.getItem('tasks') || '[]')
-    const newTask = { ...data,id : Date.now() }
-    localStorage.setItem('tasks', JSON.stringify([...existing, newTask]))
+      const result = await response.json()
 
-    navigate('/tasks')
+      if (!response.ok) {
+        alert(result.message)
+        return
+      }
+
+      navigate('/tasks')
+
+    } catch (error) {
+      console.log(error)
+      alert('Server se connection nahi!')
+    }
   }
-
 
   return (
     <div>
@@ -35,10 +49,10 @@ const AddTask = () => {
         {errors.dueDate && <p className='text-red-500 text-sm'>{errors.dueDate.message}</p>}
 
         <select {...register("status", { required: "Please fill the field" })} className='border rounded-xl p-2 text-gray-900 text-sm font-light w-full'>
-          <option value={""} >Status</option>
-          <option value={'pending'} >Pending</option>
-          <option value={'inProgress'} >In Progress</option>
-          <option value={'completed'} >Completed</option>
+          <option value={""}>Status</option>
+          <option value={'pending'}>Pending</option>
+          <option value={'inProgress'}>In Progress</option>
+          <option value={'completed'}>Completed</option>
         </select>
         {errors.status && <p className='text-red-500 text-sm'>{errors.status.message}</p>}
 

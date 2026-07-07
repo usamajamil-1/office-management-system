@@ -13,12 +13,32 @@ const { register, handleSubmit, formState: { errors } } = useForm()
 
  
 
-  const onSubmit = (data) => {
-    const existing = JSON.parse(localStorage.getItem('employees') || '[]')
-    const newEmployee = { ...data , id: Date.now() }
-    localStorage.setItem('employees', JSON.stringify([...existing, newEmployee]))
+  const onSubmit = async (data) => {
+    try {
+      const token = localStorage.getItem('token')
+      
+      const response = await fetch('http://localhost:5000/api/employees', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': token
+        },
+        body: JSON.stringify(data)
+      })
 
-   navigate('/employees') 
+      const result = await response.json()
+
+      if (!response.ok) {
+        alert(result.message)
+        return
+      }
+
+      navigate('/employees')
+
+    } catch (error) {
+      console.log(error)
+      alert('Server se connection nahi!')
+    }
   }
 
 
@@ -29,6 +49,9 @@ const { register, handleSubmit, formState: { errors } } = useForm()
 
       <Input {...register("name", { required: "please add name" })} placeholder="Name" />
       {errors.name && <p className='text-red-500 text-sm'>{errors.name.message}</p>}
+
+      <Input placeholder="Password" type="password"{...register("password", {required: "Please enter password" })}/>
+      {errors.password && ( <p className="text-red-500">{errors.password.message}</p>)}
 
       <Input {...register("email", { required: "please add email" })} placeholder="Email" />
       {errors.email && <p className='text-sm text-red-500'>{errors.email.message}</p>}

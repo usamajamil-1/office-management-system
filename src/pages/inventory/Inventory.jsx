@@ -1,37 +1,65 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Table, TableBody, TableHeader, TableHead, TableRow, TableCell } from '@/components/ui/table'
 import { Trash2, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 
-
 const Inventory = () => {
 
-  const [inventory, setInventory] = useState(() => {
-    return JSON.parse(localStorage.getItem('inventory') || '[]')
-  })
+  const [inventory, setInventory] = useState([])
+  const [editItem, setEditItem] = useState(null)
+  const token = localStorage.getItem('token')
 
+  const fetchInventory = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/inventory', {
+        method: 'GET',
+        headers: { 'authorization': token }
+      })
+      const result = await response.json()
+      setInventory(result.item)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    fetchInventory()
+  }, [])
 
   const getInventoryStatus = (status) => {
     if (status === "available") return "bg-green-100 text-green-700 "
     return 'bg-red-100 text-red-700 '
   }
 
-  const [editItem, setEditItem] = useState(null)
-
-  const deleteItem = (id) => {
-    const updated = inventory.filter(i => i.id !== id)
-    setInventory(updated)
-    localStorage.setItem('inventory', JSON.stringify(updated))
+  const deleteItem = async (id) => {
+    try {
+      await fetch(`http://localhost:5000/api/inventory/${id}`, {
+        method: 'DELETE',
+        headers: { 'authorization': token }
+      })
+      fetchInventory()
+    } catch (error) {
+      console.log(error)
+    }
   }
 
-  const saveEdit = () => {
-    const updated = inventory.map(i => i.id === editItem.id ? editItem : i)
-    setInventory(updated)
-    localStorage.setItem('inventory', JSON.stringify(updated))
-    setEditItem(null)
+  const saveEdit = async () => {
+    try {
+      await fetch(`http://localhost:5000/api/inventory/${editItem._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': token
+        },
+        body: JSON.stringify(editItem)
+      })
+      setEditItem(null)
+      fetchInventory()
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
@@ -47,21 +75,21 @@ const Inventory = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {inventory.map((inventory, id) => (
-            <TableRow key={inventory.id}>
-              <TableCell>{inventory.itemName}</TableCell>
-              <TableCell>{inventory.Category}</TableCell>
-              <TableCell>{inventory.quantity}</TableCell>
+          {inventory.map((item) => (
+            <TableRow key={item._id}>
+              <TableCell>{item.itemName}</TableCell>
+              <TableCell>{item.Category}</TableCell>
+              <TableCell>{item.quantity}</TableCell>
               <TableCell>
-                <span className={`${getInventoryStatus(inventory.status)} rounded-full text-sm px-2 py-1`}>
-                  {inventory.status}
+                <span className={`${getInventoryStatus(item.status)} rounded-full text-sm px-2 py-1`}>
+                  {item.status}
                 </span>
               </TableCell>
               <TableCell>
-                <Button size='sm' variant='ghost' onClick={() => setEditItem(inventory)}>
+                <Button size='sm' variant='ghost' onClick={() => setEditItem(item)}>
                   <Pencil size={14} />
                 </Button>
-                <Button size='sm' variant='ghost' onClick={() => deleteItem(inventory.id)}>
+                <Button size='sm' variant='ghost' onClick={() => deleteItem(item._id)}>
                   <Trash2 size={14} className='text-red-500' />
                 </Button>
               </TableCell>

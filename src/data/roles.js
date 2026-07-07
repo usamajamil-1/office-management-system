@@ -1,9 +1,9 @@
 export const roles = [
-  'Admin',
-  'HR',
-  'Accountant',
-  'Developer',
-  'Manager',
-  'Sales Manager',
-  'Marketing Manager',
+  'admin',
+  'hr',
+  'accountant',
+  'developer',
+  'manager',
+  'sales manager',
+  'marketing manager',
 ]

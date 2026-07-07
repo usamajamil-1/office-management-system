@@ -35,7 +35,7 @@ const navItems = (role) => [
     icon: User,
     links: [
       { to: '/employees', label: 'Employees', roles: ['admin', 'hr', 'employee'] },
-      { to: '/addEmployee', label: 'Add Employees', roles: ['admin', 'hr'] },
+      { to: '/addEmployee', label: 'Add Employees', roles: ['admin', 'hr','employee'] },
       { to: '/attendance', label: 'Attendance', roles: ['admin', 'hr', 'employee'] },
       { to: '/attendanceHistory', label: 'Attendance History', roles: ['admin', 'hr', 'employee'] },
       { to: '/leave', label: 'Leave', roles: ['admin', 'hr', 'employee'] },
@@ -48,7 +48,7 @@ const navItems = (role) => [
     icon: DollarSign,
     links: [
       { to: '/payroll', label: 'Payroll', roles: ['admin', 'accountant'] },
-      { to: '/payrollDetail', label: 'Payroll Detail', roles: ['admin', 'accountant'] },
+      { to: '/addPayroll', label: 'Add Payroll', roles: ['admin', 'accountant'] },
       { to: '/expenses', label: 'Expenses', roles: ['admin', 'accountant'] },
       { to: '/addExpense', label: 'Add Expense', roles: ['admin', 'accountant'] },
       { to: '/reports', label: 'Reports', roles: ['admin', 'accountant'] },
@@ -74,14 +74,17 @@ const navItems = (role) => [
       { to: '/addAnnouncements', label: 'Add Announcements', roles: ['admin', 'hr', 'employee', 'accountant'] },
     ],
   },
-  {
-    key: 'recruitment',
-    label: 'Recruitment',
-    icon: UserPlus,
-    links: [
-      { to: '/recruitment', label: 'Recruitment', roles: ['admin', 'hr', 'employee', 'accountant'] },
-    ],
-  },
+ {
+  key: 'recruitment',
+  label: 'Recruitment',
+  icon: UserPlus,
+  links: [
+    { to: '/recruitment', label: 'Recruitment', roles: ['admin', 'hr', 'employee', 'accountant'] },
+    { to: '/addApplication', label: 'Add Application', roles: ['admin', 'hr'] },
+    { to: '/addVacancy', label: 'Add Vacancy', roles: ['admin', 'hr'] },
+    { to: '/addInterview', label: 'Schedule Interview', roles: ['admin', 'hr'] },
+  ],
+},
 ]
 
 const AppSidebar = () => {
