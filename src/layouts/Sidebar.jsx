@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { LayoutDashboard, User, DollarSign, Settings, Megaphone, UserPlus, ChevronRight, X } from 'lucide-react'
+import { LayoutDashboard, User, DollarSign, Settings, Megaphone, UserPlus, UserCircle, ChevronRight, X } from 'lucide-react'
 
 import {
   Sidebar,
@@ -61,6 +61,7 @@ const navItems = (role) => [
     links: [
       { to: '/tasks', label: 'Tasks', roles: ['admin', 'hr', 'employee'] },
       { to: '/addTask', label: 'Add Task', roles: ['admin', 'hr', 'employee'] },
+      { to: '/myTasks', label: 'My Tasks', roles: ['admin', 'hr', 'employee'] },
       { to: '/inventory', label: 'Inventory', roles: ['admin', 'accountant'] },
       { to: '/addItem', label: 'Add Item', roles: ['admin', 'accountant'] },
     ],
@@ -74,17 +75,26 @@ const navItems = (role) => [
       { to: '/addAnnouncements', label: 'Add Announcements', roles: ['admin', 'hr', 'employee', 'accountant'] },
     ],
   },
- {
-  key: 'recruitment',
-  label: 'Recruitment',
-  icon: UserPlus,
-  links: [
-    { to: '/recruitment', label: 'Recruitment', roles: ['admin', 'hr', 'employee', 'accountant'] },
-    { to: '/addApplication', label: 'Add Application', roles: ['admin', 'hr'] },
-    { to: '/addVacancy', label: 'Add Vacancy', roles: ['admin', 'hr'] },
-    { to: '/addInterview', label: 'Schedule Interview', roles: ['admin', 'hr'] },
-  ],
-},
+  {
+    key: 'recruitment',
+    label: 'Recruitment',
+    icon: UserPlus,
+    links: [
+      { to: '/recruitment', label: 'Recruitment', roles: ['admin', 'hr', 'employee', 'accountant'] },
+      { to: '/addApplication', label: 'Add Application', roles: ['admin', 'hr'] },
+      { to: '/addVacancy', label: 'Add Vacancy', roles: ['admin', 'hr'] },
+      { to: '/addInterview', label: 'Schedule Interview', roles: ['admin', 'hr'] },
+    ],
+  },
+  {
+    key: 'account',
+    label: 'Account',
+    icon: UserCircle,
+    links: [
+      { to: '/profile', label: 'Profile', roles: ['admin', 'hr', 'employee'] },
+      { to: '/setting', label: 'Account Settings', roles: ['admin', 'hr'] },
+    ],
+  },
 ]
 
 const AppSidebar = () => {

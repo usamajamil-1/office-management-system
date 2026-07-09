@@ -1,14 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Table, TableCell, TableBody, TableHeader, TableRow, TableHead } from '@/components/ui/table'
 
 const AttendanceHistory = () => {
 
-    const [attendanceHistory, setAttendanceHistory] = useState([
-        { name: "Ali", date: "20-2-2026", status: "Present" },
-        { name: "Hassan", date: "19-3-2026", status: "Absent" },
-        { name: "Haseeb", date: "1-4-2026", status: "Present" },
-        { name: "Ahmad", date: "2-1-2026", status: "Absent" }
-    ])
+    const [attendanceHistory, setAttendanceHistory] = useState([])
+    const token = localStorage.getItem('token')
+
+    const fetchHistory = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/api/attendance', {
+                method: 'GET',
+                headers: { 'authorization': token }
+            })
+            const result = await response.json()
+            setAttendanceHistory(result.attendance)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        fetchHistory()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <div className='overflow-x-auto'>
@@ -21,14 +35,15 @@ const AttendanceHistory = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {attendanceHistory.map((attendanceHistory) => (
-                        <TableRow key={attendanceHistory.name}>
-                            <TableCell>{attendanceHistory.name}</TableCell>
-                            <TableCell>{attendanceHistory.date}</TableCell>
+                    {attendanceHistory.map((a) => (
+                        <TableRow key={a._id}>
+                            <TableCell>{a.name}</TableCell>
+                            <TableCell>{a.date?.split('T')[0]}</TableCell>
                             <TableCell>
-                                <span className={attendanceHistory.status === 'Present' ? "bg-green-100 text-green-700 rounded-full text-sm px-2 py-1" : 'bg-red-100 text-red-700 rounded-full text-sm px-2 py-1'}>
-                                    {attendanceHistory.status}
-                                </span></TableCell>
+                                <span className={a.status === 'Present' ? "bg-green-100 text-green-700 rounded-full text-sm px-2 py-1" : 'bg-red-100 text-red-700 rounded-full text-sm px-2 py-1'}>
+                                    {a.status}
+                                </span>
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
