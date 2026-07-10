@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { useEffect } from 'react'
 import Login from './pages/auth/Login'
 import Dashboard from './pages/dashboard/Dashboard'
 import Employees from './pages/employees/Employees'
@@ -30,10 +31,14 @@ import AddInterview from './pages/recruitment/AddInterview'
 
 
 
-
 function App() {
-  return (
 
+  useEffect(() => {
+    fetch('https://office-management-system-backend-m7u3.onrender.com')
+      .catch(() => {});
+  }, []);
+
+  return (
 
     <BrowserRouter>
       <Routes>
@@ -46,29 +51,30 @@ function App() {
         <Route path="/applyLeave" element={<ProtectedRoute allowedRoles={['admin', 'hr', 'employee']}> <MainLayout>       <ApplyLeave />       </MainLayout> </ProtectedRoute>} />
         <Route path="/payroll" element={<ProtectedRoute allowedRoles={['admin', 'hr']}> <MainLayout>     <Payroll />     </MainLayout> </ProtectedRoute>} />
         <Route path="/tasks" element={<ProtectedRoute allowedRoles={['admin', 'hr', 'employee']}> <MainLayout>       <Tasks />       </MainLayout> </ProtectedRoute>} />
-        <Route path='/attendanceHistory' element={<ProtectedRoute allowedRoles={['admin', 'hr', 'employee']}> <MainLayout> <AttendanceHistory /> </MainLayout> </ProtectedRoute>}></Route>
-        <Route path='/addTask' element={<ProtectedRoute allowedRoles={['admin', 'hr', 'employee']}> <MainLayout> <AddTask /> </MainLayout> </ProtectedRoute>}></Route>
-        <Route path='/expenses' element={<ProtectedRoute allowedRoles={['admin', 'accountant']}> <MainLayout> <Expenses /> </MainLayout> </ProtectedRoute>}></Route>
-        <Route path='/addExpense' element={<ProtectedRoute allowedRoles={['admin', 'accountant']}> <MainLayout> <AddExpense /> </MainLayout> </ProtectedRoute>}></Route>
-        <Route path='/inventory' element={<ProtectedRoute allowedRoles={['admin', 'accountant']}> <MainLayout> <Inventory /> </MainLayout> </ProtectedRoute>}></Route>
-        <Route path='/addItem' element={<ProtectedRoute allowedRoles={['admin', 'accountant']}> <MainLayout> <AddItem /> </MainLayout> </ProtectedRoute>}></Route>
-        <Route path='/reports' element={<ProtectedRoute allowedRoles={['admin', 'accountant']}> <MainLayout> <Reports /> </MainLayout> </ProtectedRoute>}></Route>
-        <Route path='/announcements' element={<ProtectedRoute allowedRoles={['admin', 'hr', 'employee', 'accountant']}> <MainLayout> <Announcements /> </MainLayout> </ProtectedRoute>}></Route>
-        <Route path='/addAnnouncements' element={<ProtectedRoute allowedRoles={['admin', 'hr', 'employee', 'accountant']}> <MainLayout> <AddAnnouncements /> </MainLayout> </ProtectedRoute>}></Route>
-        <Route path='/addEmployee' element={<ProtectedRoute allowedRoles={['admin', 'hr','employee']}> <MainLayout> <AddEmployee /> </MainLayout> </ProtectedRoute>}></Route>
-        <Route path='/profile' element={<ProtectedRoute allowedRoles={['admin', 'hr', 'employee']}> <MainLayout> <Profile /> </MainLayout> </ProtectedRoute>}></Route>
-        <Route path='/setting' element={<ProtectedRoute allowedRoles={['admin', 'hr']}> <MainLayout> <AccountSettings /> </MainLayout> </ProtectedRoute>}></Route>
-        <Route path='/myTasks' element={<ProtectedRoute allowedRoles={['admin', 'hr', 'employee']}> <MainLayout> <MyTasks /> </MainLayout> </ProtectedRoute>}></Route>
-        <Route path='/recruitment' element={<ProtectedRoute allowedRoles={['admin', 'hr']}> <MainLayout> <Recruitment /> </MainLayout> </ProtectedRoute>}></Route>
-        <Route path='/addPayroll' element={<ProtectedRoute allowedRoles={['admin', 'hr']}> <MainLayout> <AddPayroll /> </MainLayout> </ProtectedRoute>}></Route>
-        <Route path='/addApplication' element={<ProtectedRoute allowedRoles={['admin', 'hr']}> <MainLayout> <AddApplication /> </MainLayout> </ProtectedRoute>}></Route>
-        <Route path='/addVacancy' element={<ProtectedRoute allowedRoles={['admin', 'hr']}> <MainLayout> <AddVacancy /> </MainLayout> </ProtectedRoute>}></Route>
-        <Route path='/addInterview' element={<ProtectedRoute allowedRoles={['admin', 'hr']}> <MainLayout> <AddInterview /> </MainLayout> </ProtectedRoute>}></Route>
-
+        <Route path='/attendanceHistory' element={<ProtectedRoute allowedRoles={['admin', 'hr', 'employee']}> <MainLayout> <AttendanceHistory /> </MainLayout> </ProtectedRoute>} />
+        <Route path='/addTask' element={<ProtectedRoute allowedRoles={['admin', 'hr', 'employee']}> <MainLayout> <AddTask /> </MainLayout> </ProtectedRoute>} />
+        <Route path='/expenses' element={<ProtectedRoute allowedRoles={['admin', 'accountant']}> <MainLayout> <Expenses /> </MainLayout> </ProtectedRoute>} />
+        <Route path='/addExpense' element={<ProtectedRoute allowedRoles={['admin', 'accountant']}> <MainLayout> <AddExpense /> </MainLayout> </ProtectedRoute>} />
+        <Route path='/inventory' element={<ProtectedRoute allowedRoles={['admin', 'accountant']}> <MainLayout> <Inventory /> </MainLayout> </ProtectedRoute>} />
+        <Route path='/addItem' element={<ProtectedRoute allowedRoles={['admin', 'accountant']}> <MainLayout> <AddItem /> </MainLayout> </ProtectedRoute>} />
+        <Route path='/reports' element={<ProtectedRoute allowedRoles={['admin', 'accountant']}> <MainLayout> <Reports /> </MainLayout> </ProtectedRoute>} />
+        <Route path='/announcements' element={<ProtectedRoute allowedRoles={['admin', 'hr', 'employee', 'accountant']}> <MainLayout> <Announcements /> </MainLayout> </ProtectedRoute>} />
+        <Route path='/addAnnouncements' element={<ProtectedRoute allowedRoles={['admin', 'hr', 'employee', 'accountant']}> <MainLayout> <AddAnnouncements /> </MainLayout> </ProtectedRoute>} />
+        <Route path='/addEmployee' element={<ProtectedRoute allowedRoles={['admin', 'hr','employee']}> <MainLayout> <AddEmployee /> </MainLayout> </ProtectedRoute>} />
+        <Route path='/profile' element={<ProtectedRoute allowedRoles={['admin', 'hr', 'employee']}> <MainLayout> <Profile /> </MainLayout> </ProtectedRoute>} />
+        <Route path='/setting' element={<ProtectedRoute allowedRoles={['admin', 'hr']}> <MainLayout> <AccountSettings /> </MainLayout> </ProtectedRoute>} />
+        <Route path='/myTasks' element={<ProtectedRoute allowedRoles={['admin', 'hr', 'employee']}> <MainLayout> <MyTasks /> </MainLayout> </ProtectedRoute>} />
+        <Route path='/recruitment' element={<ProtectedRoute allowedRoles={['admin', 'hr']}> <MainLayout> <Recruitment /> </MainLayout> </ProtectedRoute>} />
+        <Route path='/addPayroll' element={<ProtectedRoute allowedRoles={['admin', 'hr']}> <MainLayout> <AddPayroll /> </MainLayout> </ProtectedRoute>} />
+        <Route path='/addApplication' element={<ProtectedRoute allowedRoles={['admin', 'hr']}> <MainLayout> <AddApplication /> </MainLayout> </ProtectedRoute>} />
+        <Route path='/addVacancy' element={<ProtectedRoute allowedRoles={['admin', 'hr']}> <MainLayout> <AddVacancy /> </MainLayout> </ProtectedRoute>} />
+        <Route path='/addInterview' element={<ProtectedRoute allowedRoles={['admin', 'hr']}> <MainLayout> <AddInterview /> </MainLayout> </ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
 
   )
 }
+
+
 
 export default App
