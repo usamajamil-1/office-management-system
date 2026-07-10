@@ -23,10 +23,10 @@ const Dashboard = () => {
   const fetchDashboardData = async () => {
     try {
       const [statsRes, tasksRes, appsRes, interviewsRes] = await Promise.all([
-        fetch('http://localhost:5000/api/reports/dashboard', { headers: { authorization: token } }),
-        fetch('http://localhost:5000/api/task', { headers: { authorization: token } }),
-        fetch('http://localhost:5000/api/recruitment/applications', { headers: { authorization: token } }),
-        fetch('http://localhost:5000/api/recruitment/interviews', { headers: { authorization: token } }),
+       fetch('https://office-management-system-backend-m7u3.onrender.com/api/reports/dashboard', { headers: { authorization: token } }),
+        fetch('https://office-management-system-backend-m7u3.onrender.com/api/task', { headers: { authorization: token } }),
+       fetch('https://office-management-system-backend-m7u3.onrender.com/api/recruitment/applications', { headers: { authorization: token } }),
+        fetch('https://office-management-system-backend-m7u3.onrender.com/api/recruitment/interviews', { headers: { authorization: token } }),
       ])
 
       const statsData = await statsRes.json()

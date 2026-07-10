@@ -16,7 +16,7 @@ const AddPayroll = () => {
 
   const onSubmit = async (data) => {
     try {
-      const response = await fetch('http://localhost:5000/api/payroll', {
+      const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/payroll', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

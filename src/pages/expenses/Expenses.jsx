@@ -13,7 +13,7 @@ const Expenses = () => {
 
     const fetchExpenses = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/expense', {
+            const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/expense', {
                 method: 'GET',
                 headers: { 'authorization': token }
             })
@@ -30,7 +30,7 @@ const Expenses = () => {
 
     const deleteExpense = async (id) => {
         try {
-            await fetch(`http://localhost:5000/api/expense/${id}`, {
+            awaitfetch(`https://office-management-system-backend-m7u3.onrender.com/api/expense/${id}`, {
                 method: 'DELETE',
                 headers: { 'authorization': token }
             })
@@ -42,7 +42,7 @@ const Expenses = () => {
 
     const saveEdit = async () => {
         try {
-            await fetch(`http://localhost:5000/api/expense/${editExpense._id}`, {
+            await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/expense/${editExpense._id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

@@ -18,9 +18,9 @@ const Recruitment = () => {
   const fetchAll = async () => {
     try {
       const [appsRes, interviewsRes, vacanciesRes] = await Promise.all([
-        fetch('http://localhost:5000/api/recruitment/applications', { headers: { authorization: token } }),
-        fetch('http://localhost:5000/api/recruitment/interviews', { headers: { authorization: token } }),
-        fetch('http://localhost:5000/api/recruitment/vacancies', { headers: { authorization: token } }),
+        fetch('https://office-management-system-backend-m7u3.onrender.com/api/recruitment/applications', { headers: { authorization: token } }),
+        fetch('https://office-management-system-backend-m7u3.onrender.com/api/recruitment/interviews', { headers: { authorization: token } }),
+        fetch('https://office-management-system-backend-m7u3.onrender.com/api/recruitment/vacancies', { headers: { authorization: token } }),
       ])
 
       const appsData = await appsRes.json()
@@ -49,7 +49,7 @@ const Recruitment = () => {
   // ---- Application actions ----
   const deleteApplication = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/recruitment/applications/${id}`, {
+      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/recruitment/applications/${id}`, {
         method: 'DELETE',
         headers: { authorization: token }
       })
@@ -61,7 +61,7 @@ const Recruitment = () => {
 
   const saveApplicationEdit = async () => {
     try {
-      await fetch(`http://localhost:5000/api/recruitment/applications/${editApplication._id}`, {
+      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/recruitment/applications/${editApplication._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', authorization: token },
         body: JSON.stringify(editApplication)
@@ -76,7 +76,7 @@ const Recruitment = () => {
   // ---- Vacancy actions ----
   const deleteVacancy = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/recruitment/vacancies/${id}`, {
+      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/recruitment/vacancies/${id}`, {
         method: 'DELETE',
         headers: { authorization: token }
       })
@@ -88,7 +88,7 @@ const Recruitment = () => {
 
   const saveVacancyEdit = async () => {
     try {
-      await fetch(`http://localhost:5000/api/recruitment/vacancies/${editVacancy._id}`, {
+      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/recruitment/vacancies/${editVacancy._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', authorization: token },
         body: JSON.stringify(editVacancy)
@@ -103,7 +103,7 @@ const Recruitment = () => {
   // ---- Interview actions ----
   const deleteInterview = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/recruitment/interviews/${id}`, {
+      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/recruitment/interviews/${id}`, {
         method: 'DELETE',
         headers: { authorization: token }
       })

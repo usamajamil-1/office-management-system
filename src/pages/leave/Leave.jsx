@@ -15,7 +15,7 @@ const Leave = () => {
   // Sab leaves fetch karo
   const fetchLeaves = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/leave', {
+      const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/leave', {
         method: 'GET',
         headers: { 'authorization': token }
       })
@@ -33,7 +33,7 @@ const Leave = () => {
   // Delete
   const deleteLeave = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/leave/${id}`, {
+      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/leave/${id}`, {
         method: 'DELETE',
         headers: { 'authorization': token }
       })
@@ -57,7 +57,7 @@ const Leave = () => {
   // Save edit
   const saveEdit = async () => {
     try {
-      await fetch(`http://localhost:5000/api/leave/${editingId}`, {
+      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/leave/${editingId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

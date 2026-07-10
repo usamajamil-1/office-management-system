@@ -15,7 +15,7 @@ const ApplyLeave = () => {
     try {
       const token = localStorage.getItem('token')
 
-      const response = await fetch('http://localhost:5000/api/leave', {
+      const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/leave', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

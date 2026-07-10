@@ -9,7 +9,7 @@ const Profile = () => {
 
   const fetchProfile = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/profile', {
+      const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/profile', {
         method: 'GET',
         headers: { 'authorization': token }
       })

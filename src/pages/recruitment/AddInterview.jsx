@@ -14,7 +14,7 @@ const AddInterview = () => {
 
   const fetchApplications = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/recruitment/applications', {
+      const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/recruitment/applications', {
         method: 'GET',
         headers: { 'authorization': token }
       })
@@ -32,7 +32,7 @@ const AddInterview = () => {
 
   const onSubmit = async (data) => {
     try {
-      const response = await fetch('http://localhost:5000/api/recruitment/interviews', {
+      const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/recruitment/interviews', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

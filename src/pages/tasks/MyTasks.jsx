@@ -11,7 +11,7 @@ const MyTasks = () => {
 
   const fetchMyTasks = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/task', {
+      const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/task', {
         method: 'GET',
         headers: { 'authorization': token }
       })

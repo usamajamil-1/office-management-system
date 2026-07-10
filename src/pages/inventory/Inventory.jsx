@@ -13,7 +13,7 @@ const Inventory = () => {
 
   const fetchInventory = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/inventory', {
+      const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/inventory', {
         method: 'GET',
         headers: { 'authorization': token }
       })
@@ -35,7 +35,7 @@ const Inventory = () => {
 
   const deleteItem = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/inventory/${id}`, {
+      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/inventory/${id}`, {
         method: 'DELETE',
         headers: { 'authorization': token }
       })
@@ -47,7 +47,7 @@ const Inventory = () => {
 
   const saveEdit = async () => {
     try {
-      await fetch(`http://localhost:5000/api/inventory/${editItem._id}`, {
+      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/inventory/${editItem._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

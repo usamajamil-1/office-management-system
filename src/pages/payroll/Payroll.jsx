@@ -13,7 +13,7 @@ const Payroll = () => {
 
   const fetchPayroll = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/payroll', {
+      const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/payroll', {
         method: 'GET',
         headers: { 'authorization': token }
       })
@@ -31,7 +31,7 @@ const Payroll = () => {
 
   const deletePayroll = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/payroll/${id}`, {
+      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/payroll/${id}`, {
         method: 'DELETE',
         headers: { 'authorization': token }
       })
@@ -43,7 +43,7 @@ const Payroll = () => {
 
   const saveEdit = async () => {
     try {
-      await fetch(`http://localhost:5000/api/payroll/${editPayroll._id}`, {
+      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/payroll/${editPayroll._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

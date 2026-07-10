@@ -13,7 +13,7 @@ const Tasks = () => {
 
   const fetchTasks = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/task', {
+      const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/task', {
         method: 'GET',
         headers: { 'authorization': token }
       })
@@ -36,7 +36,7 @@ const Tasks = () => {
 
   const deleteTask = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/task/${id}`, {
+      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/task/${id}`, {
         method: 'DELETE',
         headers: { 'authorization': token }
       })
@@ -48,7 +48,7 @@ const Tasks = () => {
 
   const saveEdit = async () => {
     try {
-      await fetch(`http://localhost:5000/api/task/${editTask._id}`, {
+      awaitfetch(`https://office-management-system-backend-m7u3.onrender.com/api/task/${editTask._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -16,7 +16,7 @@ const Employees = () => {
   // Sab employees fetch karo
   const fetchEmployees = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/employees', {
+      const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/employees', {
         method: 'GET',
         headers: {
           'authorization': token
@@ -39,7 +39,7 @@ const Employees = () => {
     const confirm = window.confirm("Delete karna chahte ho?")
     if (confirm) {
       try {
-        await fetch(`http://localhost:5000/api/employees/${id}`, {
+        await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/employees/${id}`, {
           method: 'DELETE',
           headers: { 'authorization': token }
         })
@@ -58,7 +58,7 @@ const Employees = () => {
   // Update karo
   const saveEdit = async () => {
     try {
-      await fetch(`http://localhost:5000/api/employees/${editEmployee._id}`, {
+      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/employees/${editEmployee._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -14,7 +14,7 @@ const Reports = () => {
 
   const fetchSummary = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/reports/summary', {
+      const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/reports/summary', {
         method: 'GET',
         headers: { 'authorization': token }
       })

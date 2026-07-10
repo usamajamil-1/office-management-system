@@ -11,7 +11,7 @@ const Attendance = () => {
 
   const fetchTodayAttendance = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/attendance/today', {
+      const response = await fetch("https://office-management-system-backend-m7u3.onrender.com/api/attendance/today", {
         method: 'GET',
         headers: { 'authorization': token }
       })
@@ -29,7 +29,7 @@ const Attendance = () => {
 
   const markMyAttendance = async (status) => {
     try {
-      const response = await fetch('http://localhost:5000/api/attendance', {
+      const response = await fetch("https://office-management-system-backend-m7u3.onrender.com/api/attendance/today", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
