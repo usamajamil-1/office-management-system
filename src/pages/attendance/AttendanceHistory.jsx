@@ -8,7 +8,7 @@ const AttendanceHistory = () => {
 
     const fetchHistory = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/attendance', {
+            const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/attendance', {
                 method: 'GET',
                 headers: { 'authorization': token }
             })
