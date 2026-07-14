@@ -6,17 +6,26 @@ import { useNavigate } from 'react-router-dom'
 
 const AddAnnouncements = () => {
 
-    const {register , handleSubmit, formState:{errors}} = useForm()
+    const { register, handleSubmit, formState: { errors } } = useForm()
 
     const navigate = useNavigate()
+    const token = localStorage.getItem('token')
 
-    const onSubmit=(data)=>{
-        const existing = JSON.parse(localStorage.getItem('announcements') || '[]')
-        const newAnnouncement = {...data, id: Date.now()}
-        localStorage.setItem('announcements',JSON.stringify([...existing,newAnnouncement]))
+    const onSubmit = async (data) => {
+        try {
+            await fetch('https://office-management-system-backend-m7u3.onrender.com/api/announcement', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': token
+                },
+                body: JSON.stringify(data)
+            })
 
-        navigate('/announcements')
-
+            navigate('/announcements')
+        } catch (error) {
+            console.log(error)
+        }
     }
 
   return (

@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Table, TableBody, TableRow, TableHead, TableCell, TableHeader } from '@/components/ui/table'
 import { Trash2, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -9,9 +9,24 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 
 const Announcements = () => {
 
-  const [announcements, setAnnouncements] = useState(() => {
-    return JSON.parse(localStorage.getItem('announcements') || '[]')
-  })
+  const [announcements, setAnnouncements] = useState([])
+  const token = localStorage.getItem('token')
+
+  const fetchAnnouncements = async () => {
+    try {
+      const res = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/announcement', {
+        headers: { 'authorization': token }
+      })
+      const data = await res.json()
+      setAnnouncements(data.announcement || [])
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    fetchAnnouncements()
+  }, [])
 
   const getStatusStyle = (type) => {
     if (type === 'info') return "bg-green-100 text-green-700"
@@ -22,17 +37,33 @@ const Announcements = () => {
 
   const [editAnnouncement, setEditAnnouncement] = useState(null)
 
-  const deleteAnnouncement = (id) => {
-    const updated = announcements.filter(a => a.id !== id)
-    setAnnouncements(updated)
-    localStorage.setItem('announcements', JSON.stringify(updated))
+  const deleteAnnouncement = async (id) => {
+    try {
+      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/announcement/${id}`, {
+        method: 'DELETE',
+        headers: { 'authorization': token }
+      })
+      fetchAnnouncements()
+    } catch (error) {
+      console.log(error)
+    }
   }
 
-  const saveEdit = () => {
-    const updated = announcements.map(a => a.id === editAnnouncement.id ? editAnnouncement : a)
-    setAnnouncements(updated)
-    localStorage.setItem('announcements', JSON.stringify(updated))
-    setEditAnnouncement(null)
+  const saveEdit = async () => {
+    try {
+      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/announcement/${editAnnouncement._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': token
+        },
+        body: JSON.stringify(editAnnouncement)
+      })
+      setEditAnnouncement(null)
+      fetchAnnouncements()
+    } catch (error) {
+      console.log(error)
+    }
   }
 
 
@@ -50,10 +81,10 @@ const Announcements = () => {
         </TableHeader>
         <TableBody>
           {announcements.map((announcements) => (
-            <TableRow key={announcements.id}>
+            <TableRow key={announcements._id}>
               <TableCell>{announcements.title}</TableCell>
               <TableCell>{announcements.message}</TableCell>
-              <TableCell>{announcements.date}</TableCell>
+              <TableCell>{new Date(announcements.date).toLocaleDateString()}</TableCell>
               <TableCell>
                 <span className={`${getStatusStyle(announcements.type)} rounded-full text-sm px-2 py-1`}>
                   {announcements.type}
@@ -63,7 +94,7 @@ const Announcements = () => {
                 <Button size='sm' variant='ghost' onClick={() => setEditAnnouncement(announcements)}>
                   <Pencil size={14} />
                 </Button>
-                <Button size='sm' variant='ghost' onClick={() => deleteAnnouncement(announcements.id)}>
+                <Button size='sm' variant='ghost' onClick={() => deleteAnnouncement(announcements._id)}>
                   <Trash2 size={14} className='text-red-500' />
                 </Button>
               </TableCell>
@@ -79,7 +110,7 @@ const Announcements = () => {
           </DialogHeader>
           <Input placeholder="Title" value={editAnnouncement?.title || ""} onChange={e => setEditAnnouncement({ ...editAnnouncement, title: e.target.value })} />
           <Input placeholder="Message" value={editAnnouncement?.message || ""} onChange={e => setEditAnnouncement({ ...editAnnouncement, message: e.target.value })} />
-          <Input type="date" value={editAnnouncement?.date || ""} onChange={e => setEditAnnouncement({ ...editAnnouncement, date: e.target.value })} />
+          <Input type="date" value={editAnnouncement?.date ? editAnnouncement.date.slice(0, 10) : ""} onChange={e => setEditAnnouncement({ ...editAnnouncement, date: e.target.value })} />
           <select value={editAnnouncement?.type || ""} onChange={e => setEditAnnouncement({ ...editAnnouncement, type: e.target.value })} className='border rounded-xl p-2 text-sm'>
             <option value='info'>Info</option>
             <option value='warning'>Warning</option>
