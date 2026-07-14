@@ -48,7 +48,7 @@ const Tasks = () => {
 
   const saveEdit = async () => {
     try {
-      awaitfetch(`https://office-management-system-backend-m7u3.onrender.com/api/task/${editTask._id}`, {
+      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/task/${editTask._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
