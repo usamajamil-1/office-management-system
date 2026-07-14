@@ -30,7 +30,7 @@ const Expenses = () => {
 
     const deleteExpense = async (id) => {
         try {
-            awaitfetch(`https://office-management-system-backend-m7u3.onrender.com/api/expense/${id}`, {
+            await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/expense/${id}`, {
                 method: 'DELETE',
                 headers: { 'authorization': token }
             })
