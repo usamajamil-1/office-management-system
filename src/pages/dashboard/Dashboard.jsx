@@ -6,6 +6,10 @@ import { useNavigate, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { CheckCircle2, UserPlus, Plus } from 'lucide-react'
 import { attendanceData, employeeStructureData, companyPayData, performanceData } from '@/data/dashboardDummyData'
+import { getDashboardStats } from '@/services/reports.service'
+import { getTasks } from '@/services/task.service'
+import { getApplications, getInterviews } from '@/services/recruitment.service'
+import { getErrorMessage } from '@/services/api'
 
 const Dashboard = () => {
 
@@ -14,29 +18,23 @@ const Dashboard = () => {
   const [applications, setApplications] = useState([])
   const [interviews, setInterviews] = useState([])
 
-  const token = localStorage.getItem('token')
   const navigate = useNavigate()
 
   const fetchDashboardData = async () => {
     try {
-      const [statsRes, tasksRes, appsRes, interviewsRes] = await Promise.all([
-       fetch('https://office-management-system-backend-m7u3.onrender.com/api/reports/dashboard', { headers: { authorization: token } }),
-        fetch('https://office-management-system-backend-m7u3.onrender.com/api/task', { headers: { authorization: token } }),
-       fetch('https://office-management-system-backend-m7u3.onrender.com/api/recruitment/applications', { headers: { authorization: token } }),
-        fetch('https://office-management-system-backend-m7u3.onrender.com/api/recruitment/interviews', { headers: { authorization: token } }),
+      const [dashStats, tasks, apps, interviewsList] = await Promise.all([
+        getDashboardStats(),
+        getTasks(),
+        getApplications(),
+        getInterviews(),
       ])
 
-      const statsData = await statsRes.json()
-      const tasksData = await tasksRes.json()
-      const appsData = await appsRes.json()
-      const interviewsData = await interviewsRes.json()
-
-      setStats(statsData.stats || {})
-      setTaskList(tasksData.task || [])
-      setApplications((appsData.applications || []).slice(0, 5))
-      setInterviews((interviewsData.interviews || []).slice(0, 5))
+      setStats(dashStats || {})
+      setTaskList(tasks || [])
+      setApplications((apps || []).slice(0, 5))
+      setInterviews((interviewsList || []).slice(0, 5))
     } catch (error) {
-      console.log(error)
+      console.log(getErrorMessage(error))
     }
   }
 
