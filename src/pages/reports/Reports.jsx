@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import StatCard from '@/components/common/StatCard'
+import { getSummary } from '@/services/reports.service'
 
 const Reports = () => {
 
@@ -10,20 +11,16 @@ const Reports = () => {
     totalLeaves: 0,
     totalInventory: 0,
   })
-  const token = localStorage.getItem('token')
+  
 
   const fetchSummary = async () => {
-    try {
-      const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/reports/summary', {
-        method: 'GET',
-        headers: { 'authorization': token }
-      })
-      const result = await response.json()
-      setSummary(result.summary)
-    } catch (error) {
-      console.log(error)
-    }
+  try {
+    const data = await getSummary()
+    setSummary(data)
+  } catch (error) {
+    console.log(error)
   }
+}
 
   useEffect(() => {
     fetchSummary()
