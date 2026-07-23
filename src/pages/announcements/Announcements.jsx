@@ -5,24 +5,22 @@ import { Trash2, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { getAnnouncements, updateAnnouncement, deleteAnnouncement as deleteAnnouncementApi } from '@/services/announcement.service'
 
 
 const Announcements = () => {
 
   const [announcements, setAnnouncements] = useState([])
-  const token = localStorage.getItem('token')
+  
 
   const fetchAnnouncements = async () => {
-    try {
-      const res = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/announcement', {
-        headers: { 'authorization': token }
-      })
-      const data = await res.json()
-      setAnnouncements(data.announcement || [])
-    } catch (error) {
-      console.log(error)
-    }
+  try {
+    const data = await getAnnouncements()
+    setAnnouncements(data || [])
+  } catch (error) {
+    console.log(error)
   }
+}
 
   useEffect(() => {
     fetchAnnouncements()
@@ -37,34 +35,24 @@ const Announcements = () => {
 
   const [editAnnouncement, setEditAnnouncement] = useState(null)
 
-  const deleteAnnouncement = async (id) => {
-    try {
-      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/announcement/${id}`, {
-        method: 'DELETE',
-        headers: { 'authorization': token }
-      })
-      fetchAnnouncements()
-    } catch (error) {
-      console.log(error)
-    }
+  const handleDelete = async (id) => {
+  try {
+    await deleteAnnouncementApi(id)
+    fetchAnnouncements()
+  } catch (error) {
+    console.log(error)
   }
+}
 
   const saveEdit = async () => {
-    try {
-      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/announcement/${editAnnouncement._id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': token
-        },
-        body: JSON.stringify(editAnnouncement)
-      })
-      setEditAnnouncement(null)
-      fetchAnnouncements()
-    } catch (error) {
-      console.log(error)
-    }
+  try {
+    await updateAnnouncement(editAnnouncement._id, editAnnouncement)
+    setEditAnnouncement(null)
+    fetchAnnouncements()
+  } catch (error) {
+    console.log(error)
   }
+}
 
 
   return (
@@ -94,7 +82,7 @@ const Announcements = () => {
                 <Button size='sm' variant='ghost' onClick={() => setEditAnnouncement(announcements)}>
                   <Pencil size={14} />
                 </Button>
-                <Button size='sm' variant='ghost' onClick={() => deleteAnnouncement(announcements._id)}>
+                <Button size='sm' variant='ghost' onClick={() => handleDelete(announcements._id)}>
                   <Trash2 size={14} className='text-red-500' />
                 </Button>
               </TableCell>

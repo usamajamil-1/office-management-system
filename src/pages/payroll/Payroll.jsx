@@ -4,21 +4,17 @@ import { Trash2, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { getPayroll, updatePayroll, deletePayroll as deletePayrollApi } from '@/services/payroll.service'
 
 const Payroll = () => {
 
   const [payroll, setPayroll] = useState([])
   const [editPayroll, setEditPayroll] = useState(null)
-  const token = localStorage.getItem('token')
 
   const fetchPayroll = async () => {
     try {
-      const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/payroll', {
-        method: 'GET',
-        headers: { 'authorization': token }
-      })
-      const result = await response.json()
-      setPayroll(result.payroll)
+      const data = await getPayroll()
+      setPayroll(data)
     } catch (error) {
       console.log(error)
     }
@@ -26,15 +22,11 @@ const Payroll = () => {
 
   useEffect(() => {
     fetchPayroll()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const deletePayroll = async (id) => {
+  const handleDelete = async (id) => {
     try {
-      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/payroll/${id}`, {
-        method: 'DELETE',
-        headers: { 'authorization': token }
-      })
+      await deletePayrollApi(id)
       fetchPayroll()
     } catch (error) {
       console.log(error)
@@ -43,14 +35,7 @@ const Payroll = () => {
 
   const saveEdit = async () => {
     try {
-      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/payroll/${editPayroll._id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': token
-        },
-        body: JSON.stringify(editPayroll)
-      })
+      await updatePayroll(editPayroll._id, editPayroll)
       setEditPayroll(null)
       fetchPayroll()
     } catch (error) {
@@ -73,7 +58,7 @@ const Payroll = () => {
         <TableBody>
           {payroll.map((p) => (
             <TableRow key={p._id}>
-              <TableCell>{p.name}</TableCell>
+              <TableCell>{p.employee?.name || '—'}</TableCell>
               <TableCell>{p.department}</TableCell>
               <TableCell>{p.netSalary}</TableCell>
               <TableCell>
@@ -85,7 +70,7 @@ const Payroll = () => {
                 <Button size='sm' variant='ghost' onClick={() => setEditPayroll(p)}>
                   <Pencil size={14} />
                 </Button>
-                <Button size='sm' variant='ghost' onClick={() => deletePayroll(p._id)}>
+                <Button size='sm' variant='ghost' onClick={() => handleDelete(p._id)}>
                   <Trash2 size={14} className='text-red-500' />
                 </Button>
               </TableCell>
@@ -100,11 +85,8 @@ const Payroll = () => {
             <DialogTitle>Edit Payroll</DialogTitle>
           </DialogHeader>
 
-          <Input
-            placeholder="Employee Name"
-            value={editPayroll?.name || ""}
-            onChange={e => setEditPayroll({ ...editPayroll, name: e.target.value })}
-          />
+          <p className='text-sm text-gray-500'>Employee: <span className='font-semibold text-gray-800'>{editPayroll?.employee?.name || '—'}</span></p>
+
           <Input
             placeholder="Department"
             value={editPayroll?.department || ""}

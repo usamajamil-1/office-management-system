@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import StatCard from '@/components/common/StatCard'
 import { Bar, BarChart, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
-import { attendanceData } from '@/data/chartData'
 import { User, UserCheck, UserMinus, ClipboardList, Megaphone } from 'lucide-react'
-import { employeeStructureData } from '@/data/EmployeeStructureData'
 import { useNavigate, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { companyPayData } from '@/data/CompanyPayData'
-import { performanceData } from '@/data/performanceData'
 import { CheckCircle2, UserPlus, Plus } from 'lucide-react'
+import { attendanceData, employeeStructureData, companyPayData, performanceData } from '@/data/dashboardDummyData'
 
 const Dashboard = () => {
 

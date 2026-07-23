@@ -5,6 +5,11 @@ import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import StatCard from '@/components/common/StatCard'
 import { Users, UserCheck, UserX, Clock, Briefcase, Pencil, Trash2 } from 'lucide-react'
+import {
+  getApplications, updateApplication, deleteApplication as deleteApplicationApi,
+  getInterviews, deleteInterview as deleteInterviewApi,
+  getVacancies, updateVacancy, deleteVacancy as deleteVacancyApi
+} from '@/services/recruitment.service'
 
 const Recruitment = () => {
 
@@ -13,23 +18,18 @@ const Recruitment = () => {
   const [vacancies, setVacancies] = useState([])
   const [editApplication, setEditApplication] = useState(null)
   const [editVacancy, setEditVacancy] = useState(null)
-  const token = localStorage.getItem('token')
+
 
   const fetchAll = async () => {
     try {
-      const [appsRes, interviewsRes, vacanciesRes] = await Promise.all([
-        fetch('https://office-management-system-backend-m7u3.onrender.com/api/recruitment/applications', { headers: { authorization: token } }),
-        fetch('https://office-management-system-backend-m7u3.onrender.com/api/recruitment/interviews', { headers: { authorization: token } }),
-        fetch('https://office-management-system-backend-m7u3.onrender.com/api/recruitment/vacancies', { headers: { authorization: token } }),
+      const [appsData, interviewsData, vacanciesData] = await Promise.all([
+        getApplications(),
+        getInterviews(),
+        getVacancies(),
       ])
-
-      const appsData = await appsRes.json()
-      const interviewsData = await interviewsRes.json()
-      const vacanciesData = await vacanciesRes.json()
-
-      setApplications(appsData.applications || [])
-      setInterviews(interviewsData.interviews || [])
-      setVacancies(vacanciesData.vacancies || [])
+      setApplications(appsData || [])
+      setInterviews(interviewsData || [])
+      setVacancies(vacanciesData || [])
     } catch (error) {
       console.log(error)
     }
@@ -42,17 +42,15 @@ const Recruitment = () => {
 
   const accepted = applications.filter(a => a.status === 'Approved').length
   const rejected = applications.filter(a => a.status === 'Rejected').length
-  const pending  = applications.filter(a => a.status === 'Pending').length
+  const pending = applications.filter(a => a.status === 'Pending').length
 
   const getInitials = (name) => name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
 
   // ---- Application actions ----
-  const deleteApplication = async (id) => {
+
+  const handleDeleteApplication = async (id) => {
     try {
-      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/recruitment/applications/${id}`, {
-        method: 'DELETE',
-        headers: { authorization: token }
-      })
+      await deleteApplicationApi(id)
       fetchAll()
     } catch (error) {
       console.log(error)
@@ -61,11 +59,7 @@ const Recruitment = () => {
 
   const saveApplicationEdit = async () => {
     try {
-      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/recruitment/applications/${editApplication._id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', authorization: token },
-        body: JSON.stringify(editApplication)
-      })
+      await updateApplication(editApplication._id, editApplication)
       setEditApplication(null)
       fetchAll()
     } catch (error) {
@@ -74,12 +68,10 @@ const Recruitment = () => {
   }
 
   // ---- Vacancy actions ----
-  const deleteVacancy = async (id) => {
+
+  const handleDeleteVacancy = async (id) => {
     try {
-      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/recruitment/vacancies/${id}`, {
-        method: 'DELETE',
-        headers: { authorization: token }
-      })
+      await deleteVacancyApi(id)
       fetchAll()
     } catch (error) {
       console.log(error)
@@ -88,11 +80,7 @@ const Recruitment = () => {
 
   const saveVacancyEdit = async () => {
     try {
-      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/recruitment/vacancies/${editVacancy._id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', authorization: token },
-        body: JSON.stringify(editVacancy)
-      })
+      await updateVacancy(editVacancy._id, editVacancy)
       setEditVacancy(null)
       fetchAll()
     } catch (error) {
@@ -101,12 +89,10 @@ const Recruitment = () => {
   }
 
   // ---- Interview actions ----
-  const deleteInterview = async (id) => {
+
+  const handleDeleteInterview = async (id) => {
     try {
-      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/recruitment/interviews/${id}`, {
-        method: 'DELETE',
-        headers: { authorization: token }
-      })
+      await deleteInterviewApi(id)
       fetchAll()
     } catch (error) {
       console.log(error)
@@ -118,11 +104,11 @@ const Recruitment = () => {
 
       {/* Row 1 — Stat Cards */}
       <div className='grid grid-cols-2 lg:grid-cols-5 gap-4'>
-        <StatCard title='Total Applications' value={applications.length} icon={Users}      iconBg='bg-blue-50'   iconColor='text-blue-500'   />
-        <StatCard title='Accepted'           value={accepted}            icon={UserCheck}  iconBg='bg-green-50'  iconColor='text-green-500'  />
-        <StatCard title='Rejected'           value={rejected}            icon={UserX}      iconBg='bg-red-50'    iconColor='text-red-500'    />
-        <StatCard title='Pending'            value={pending}             icon={Clock}      iconBg='bg-amber-50'  iconColor='text-amber-500'  />
-        <StatCard title='Vacancies'          value={vacancies.length}    icon={Briefcase}  iconBg='bg-purple-50' iconColor='text-purple-500' />
+        <StatCard title='Total Applications' value={applications.length} icon={Users} iconBg='bg-blue-50' iconColor='text-blue-500' />
+        <StatCard title='Accepted' value={accepted} icon={UserCheck} iconBg='bg-green-50' iconColor='text-green-500' />
+        <StatCard title='Rejected' value={rejected} icon={UserX} iconBg='bg-red-50' iconColor='text-red-500' />
+        <StatCard title='Pending' value={pending} icon={Clock} iconBg='bg-amber-50' iconColor='text-amber-500' />
+        <StatCard title='Vacancies' value={vacancies.length} icon={Briefcase} iconBg='bg-purple-50' iconColor='text-purple-500' />
       </div>
 
       {/* Row 2 — Applications + Interview */}
@@ -146,16 +132,16 @@ const Recruitment = () => {
                   </div>
                   <div className='flex items-center gap-2'>
                     <span className={`text-xs font-semibold px-2 py-0.5 rounded-full
-                      ${app.status === 'Pending'  ? 'bg-amber-50 text-amber-600' : ''}
+                      ${app.status === 'Pending' ? 'bg-amber-50 text-amber-600' : ''}
                       ${app.status === 'Approved' ? 'bg-green-50 text-green-600' : ''}
-                      ${app.status === 'Rejected' ? 'bg-red-50 text-red-500'    : ''}
+                      ${app.status === 'Rejected' ? 'bg-red-50 text-red-500' : ''}
                     `}>
                       {app.status}
                     </span>
                     <Button size='sm' variant='ghost' onClick={() => setEditApplication(app)}>
                       <Pencil size={14} />
                     </Button>
-                    <Button size='sm' variant='ghost' onClick={() => deleteApplication(app._id)}>
+                    <Button size='sm' variant='ghost' onClick={() => handleDeleteApplication(app._id)}>
                       <Trash2 size={14} className='text-red-500' />
                     </Button>
                   </div>
@@ -185,7 +171,7 @@ const Recruitment = () => {
                     <span className='text-xs font-semibold text-gray-500'>
                       {new Date(item.time).toLocaleString()}
                     </span>
-                    <Button size='sm' variant='ghost' onClick={() => deleteInterview(item._id)}>
+                    <Button size='sm' variant='ghost' onClick={() => handleDeleteInterview(item._id)}>
                       <Trash2 size={14} className='text-red-500' />
                     </Button>
                   </div>
@@ -213,7 +199,7 @@ const Recruitment = () => {
                     <Button size='sm' variant='ghost' onClick={() => setEditVacancy(vacancy)}>
                       <Pencil size={14} />
                     </Button>
-                    <Button size='sm' variant='ghost' onClick={() => deleteVacancy(vacancy._id)}>
+                    <Button size='sm' variant='ghost' onClick={() => handleDeleteVacancy(vacancy._id)}>
                       <Trash2 size={14} className='text-red-500' />
                     </Button>
                   </div>

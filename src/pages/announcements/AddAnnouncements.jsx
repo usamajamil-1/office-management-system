@@ -3,31 +3,25 @@ import { Input } from '@/components/ui/input'
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
+import { createAnnouncement } from '@/services/announcement.service'
+import { getErrorMessage } from '@/services/api'
 
 const AddAnnouncements = () => {
 
     const { register, handleSubmit, formState: { errors } } = useForm()
 
     const navigate = useNavigate()
-    const token = localStorage.getItem('token')
+    
 
     const onSubmit = async (data) => {
-        try {
-            await fetch('https://office-management-system-backend-m7u3.onrender.com/api/announcement', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': token
-                },
-                body: JSON.stringify(data)
-            })
-
-            navigate('/announcements')
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
+  try {
+    await createAnnouncement(data)
+    navigate('/announcements')
+  } catch (error) {
+    alert(getErrorMessage(error))
+    console.log(error)
+  }
+}
   return (
     <div>
         <h1 className='mb-2 font-bold '>Add Announcement</h1>
@@ -47,7 +41,7 @@ const AddAnnouncements = () => {
             <option value={"warning"}>Warning</option>
             <option value={"important"}>Important</option>
         </select>
-        {errors.name && <p className='text-red-500 text-sm'>{errors.name.message}</p>}
+        {errors.type && <p className='text-red-500 text-sm'>{errors.type.message}</p>}
 
         <Button onClick={handleSubmit(onSubmit)}>Submit</Button>
         </div>

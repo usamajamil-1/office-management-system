@@ -1,29 +1,25 @@
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { CheckCircle2, Clock, Circle } from 'lucide-react'
+import { getTasks } from '@/services/task.service'
 
 const MyTasks = () => {
+  const employeeId = localStorage.getItem('employeeId') || ''
 
   const [myTasks, setMyTasks] = useState([])
-  const token = localStorage.getItem('token')
-  const email = localStorage.getItem('userEmail') || ''
-  const name = email.split('@')[0]
+  
+
+
 
   const fetchMyTasks = async () => {
-    try {
-      const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/task', {
-        method: 'GET',
-        headers: { 'authorization': token }
-      })
-      const result = await response.json()
-      const filtered = (result.task || []).filter(task =>
-        task.assignedTo?.toLowerCase() === name.toLowerCase()
-      )
-      setMyTasks(filtered)
-    } catch (error) {
-      console.log(error)
-    }
+  try {
+    const tasks = await getTasks()
+    const filtered = tasks.filter(task => task.assignedTo?._id === employeeId)
+    setMyTasks(filtered)
+  } catch (error) {
+    console.log(error)
   }
+}
 
   useEffect(() => {
     fetchMyTasks()

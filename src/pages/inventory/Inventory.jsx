@@ -4,25 +4,22 @@ import { Trash2, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { getInventory, updateItem, deleteItem as deleteItemApi } from '@/services/inventory.service'
 
 const Inventory = () => {
 
   const [inventory, setInventory] = useState([])
   const [editItem, setEditItem] = useState(null)
-  const token = localStorage.getItem('token')
+  
 
-  const fetchInventory = async () => {
-    try {
-      const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/inventory', {
-        method: 'GET',
-        headers: { 'authorization': token }
-      })
-      const result = await response.json()
-      setInventory(result.item)
-    } catch (error) {
-      console.log(error)
-    }
+ const fetchInventory = async () => {
+  try {
+    const data = await getInventory()
+    setInventory(data)
+  } catch (error) {
+    console.log(error)
   }
+}
 
   useEffect(() => {
     fetchInventory()
@@ -33,34 +30,23 @@ const Inventory = () => {
     return 'bg-red-100 text-red-700 '
   }
 
-  const deleteItem = async (id) => {
-    try {
-      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/inventory/${id}`, {
-        method: 'DELETE',
-        headers: { 'authorization': token }
-      })
-      fetchInventory()
-    } catch (error) {
-      console.log(error)
-    }
+  const handleDelete = async (id) => {
+  try {
+    await deleteItemApi(id)
+    fetchInventory()
+  } catch (error) {
+    console.log(error)
   }
-
+}
   const saveEdit = async () => {
-    try {
-      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/inventory/${editItem._id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': token
-        },
-        body: JSON.stringify(editItem)
-      })
-      setEditItem(null)
-      fetchInventory()
-    } catch (error) {
-      console.log(error)
-    }
+  try {
+    await updateItem(editItem._id, editItem)
+    setEditItem(null)
+    fetchInventory()
+  } catch (error) {
+    console.log(error)
   }
+}
 
   return (
     <div className='overflow-x-auto'>
@@ -89,7 +75,7 @@ const Inventory = () => {
                 <Button size='sm' variant='ghost' onClick={() => setEditItem(item)}>
                   <Pencil size={14} />
                 </Button>
-                <Button size='sm' variant='ghost' onClick={() => deleteItem(item._id)}>
+                <Button size='sm' variant='ghost' onClick={() => handleDelete(item._id)}>
                   <Trash2 size={14} className='text-red-500' />
                 </Button>
               </TableCell>

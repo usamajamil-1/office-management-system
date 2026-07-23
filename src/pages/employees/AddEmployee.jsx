@@ -2,8 +2,10 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { roles } from '@/data/roles'
 import { Navigate, useNavigate } from 'react-router-dom'
+import { createEmployee } from '@/services/employee.service'
+import { getErrorMessage } from '@/services/api'
+import { roles } from '@/data/roles'
 
 const AddEmployee = () => {
 
@@ -13,33 +15,15 @@ const { register, handleSubmit, formState: { errors } } = useForm()
 
  
 
-  const onSubmit = async (data) => {
-    try {
-      const token = localStorage.getItem('token')
-      
-      const response = await fetch("https://office-management-system-backend-m7u3.onrender.com/api/employees", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': token
-        },
-        body: JSON.stringify(data)
-      })
-
-      const result = await response.json()
-
-      if (!response.ok) {
-        alert(result.message)
-        return
-      }
-
-      navigate('/employees')
-
-    } catch (error) {
-      console.log(error)
-      alert('Server se connection nahi!')
-    }
+ const onSubmit = async (data) => {
+  try {
+    await createEmployee(data)
+    navigate('/employees')
+  } catch (error) {
+    alert(getErrorMessage(error))
+    console.log(error)
   }
+}
 
 
 

@@ -2,51 +2,29 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+import { applyLeave } from '@/services/leave.service'
+import { getErrorMessage } from '@/services/api'
 
 const ApplyLeave = () => {
 
-
     const { register, handleSubmit, formState: { errors } } = useForm()
-
-
     const navigate = useNavigate()
+    const employeeId = localStorage.getItem('employeeId') || ''
 
     const onSubmit = async (data) => {
-    try {
-      const token = localStorage.getItem('token')
-
-      const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/leave', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': token
-        },
-        body: JSON.stringify(data)
-      })
-
-      const result = await response.json()
-
-      if (!response.ok) {
-        alert(result.message)
-        return
+      try {
+        await applyLeave({ ...data, employee: employeeId })
+        navigate('/leave')
+      } catch (error) {
+        alert(getErrorMessage(error))
+        console.log(error)
       }
-
-      navigate('/leave')
-
-    } catch (error) {
-      console.log(error)
-      alert('Server se connection nahi!')
     }
-  } 
-
-
 
     return (
         <div>
             <h1 className='mb-2 font-bold '>Apply Leave</h1>
             <div className='flex flex-col gap-4 max-w-md'>
-                <Input  {...register("name", { required: "Name required" })} placeholder='Name' />
-                {errors.name && <p className='text-red-500 text-sm'>{errors.name.message}</p>}
 
                 <select {...register("leaveType", { required: "Please select Leave Type" })} className='border rounded-xl p-2 text-gray-900 text-sm font-light w-full'>
                     <option value="">Select Leave Type</option>

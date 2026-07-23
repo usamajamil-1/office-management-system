@@ -5,29 +5,24 @@ import { Input } from '@/components/ui/input'
 import { useNavigate } from 'react-router-dom'
 import { Pencil, Trash2 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
+import { getEmployees, updateEmployee, deleteEmployee as deleteEmployeeApi } from '@/services/employee.service'
 
 const Employees = () => {
 
   const navigate = useNavigate()
   const [employees, setEmployees] = useState([])
   const [editEmployee, setEditEmployee] = useState(null)
-  const token = localStorage.getItem('token')
+  
 
   // Sab employees fetch karo
-  const fetchEmployees = async () => {
-    try {
-      const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/employees', {
-        method: 'GET',
-        headers: {
-          'authorization': token
-        }
-      })
-      const result = await response.json()
-      setEmployees(result.employee)
-    } catch (error) {
-      console.log(error)
-    }
+ const fetchEmployees = async () => {
+  try {
+    const data = await getEmployees()
+    setEmployees(data)
+  } catch (error) {
+    console.log(error)
   }
+}
 
   // Page khulte hi employees load karo
   useEffect(() => {
@@ -36,19 +31,16 @@ const Employees = () => {
 
   // Delete karo
   const deleteEmployee = async (id) => {
-    const confirm = window.confirm("Delete karna chahte ho?")
-    if (confirm) {
-      try {
-        await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/employees/${id}`, {
-          method: 'DELETE',
-          headers: { 'authorization': token }
-        })
-        fetchEmployees() // List refresh karo
-      } catch (error) {
-        console.log(error)
-      }
+  const confirm = window.confirm("Delete karna chahte ho?")
+  if (confirm) {
+    try {
+      await deleteEmployeeApi(id)
+      fetchEmployees()
+    } catch (error) {
+      console.log(error)
     }
   }
+}
 
   // Edit modal kholo
   const handleEdit = (employee) => {
@@ -57,21 +49,14 @@ const Employees = () => {
 
   // Update karo
   const saveEdit = async () => {
-    try {
-      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/employees/${editEmployee._id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': token
-        },
-        body: JSON.stringify(editEmployee)
-      })
-      setEditEmployee(null)
-      fetchEmployees() // List refresh karo
-    } catch (error) {
-      console.log(error)
-    }
+  try {
+    await updateEmployee(editEmployee._id, editEmployee)
+    setEditEmployee(null)
+    fetchEmployees()
+  } catch (error) {
+    console.log(error)
   }
+}
 
   return (
     <div>

@@ -4,21 +4,18 @@ import { Trash2, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { getExpenses, updateExpense, deleteExpense as deleteExpenseApi } from '@/services/expense.service'
 
 const Expenses = () => {
 
     const [expenses, setExpense] = useState([])
     const [editExpense, setEditExpense] = useState(null)
-    const token = localStorage.getItem('token')
+
 
     const fetchExpenses = async () => {
         try {
-            const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/expense', {
-                method: 'GET',
-                headers: { 'authorization': token }
-            })
-            const result = await response.json()
-            setExpense(result.expense)
+            const data = await getExpenses()
+            setExpense(data)
         } catch (error) {
             console.log(error)
         }
@@ -28,12 +25,9 @@ const Expenses = () => {
         fetchExpenses()
     }, [])
 
-    const deleteExpense = async (id) => {
+    const handleDelete = async (id) => {
         try {
-            await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/expense/${id}`, {
-                method: 'DELETE',
-                headers: { 'authorization': token }
-            })
+            await deleteExpenseApi(id)
             fetchExpenses()
         } catch (error) {
             console.log(error)
@@ -42,14 +36,7 @@ const Expenses = () => {
 
     const saveEdit = async () => {
         try {
-            await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/expense/${editExpense._id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': token
-                },
-                body: JSON.stringify(editExpense)
-            })
+            await updateExpense(editExpense._id, editExpense)
             setEditExpense(null)
             fetchExpenses()
         } catch (error) {
@@ -84,7 +71,7 @@ const Expenses = () => {
                                 <Button size='sm' variant='ghost' onClick={() => setEditExpense(expense)}>
                                     <Pencil size={14} />
                                 </Button>
-                                <Button size='sm' variant='ghost' onClick={() => deleteExpense(expense._id)}>
+                                <Button size='sm' variant='ghost' onClick={() => handleDelete(expense._id)}>
                                     <Trash2 size={14} className='text-red-500' />
                                 </Button>
                             </TableCell>

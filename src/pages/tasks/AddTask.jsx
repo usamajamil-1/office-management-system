@@ -2,36 +2,32 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+import { useState, useEffect } from 'react'
+import { createTask } from '@/services/task.service'
+import { getEmployees } from '@/services/employee.service'
+import { getErrorMessage } from '@/services/api'
 
 const AddTask = () => {
 
   const { register, handleSubmit, formState: { errors } } = useForm()
+
+  const [employees, setEmployees] = useState([])
+
+  useEffect(() => {
+    getEmployees().then(setEmployees).catch(console.log)
+  }, [])
+
   const navigate = useNavigate()
-  const token = localStorage.getItem('token')
+
+
 
   const onSubmit = async (data) => {
     try {
-      const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/task', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': token
-        },
-        body: JSON.stringify(data)
-      })
-
-      const result = await response.json()
-
-      if (!response.ok) {
-        alert(result.message)
-        return
-      }
-
+      await createTask(data)
       navigate('/tasks')
-
     } catch (error) {
+      alert(getErrorMessage(error))
       console.log(error)
-      alert('Server se connection nahi!')
     }
   }
 
@@ -42,7 +38,12 @@ const AddTask = () => {
         <Input {...register("title", { required: "Please add title" })} placeholder='Title' />
         {errors.title && <p className='text-red-500 text-sm'>{errors.title.message}</p>}
 
-        <Input {...register("assignedTo", { required: "Please fill the field" })} placeholder='Assign to' />
+        <select {...register("assignedTo", { required: "Please select an employee" })} className='border rounded-xl p-2 text-gray-900 text-sm font-light w-full'>
+          <option value="">Select Employee</option>
+          {employees.map(emp => (
+            <option key={emp._id} value={emp._id}>{emp.name}</option>
+          ))}
+        </select>
         {errors.assignedTo && <p className='text-red-500 text-sm'>{errors.assignedTo.message}</p>}
 
         <Input {...register("dueDate", { required: "Please fill the field" })} type={'date'} placeholder='Due Date' />

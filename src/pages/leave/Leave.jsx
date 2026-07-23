@@ -4,23 +4,18 @@ import { Trash2, Pencil, X, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { getLeaves, updateLeave, deleteLeave as deleteLeaveApi } from '@/services/leave.service'
 
 const Leave = () => {
 
   const [leave, setLeave] = useState([])
   const [editingId, setEditingId] = useState(null)
   const [editData, setEditData] = useState({})
-  const token = localStorage.getItem('token')
 
-  // Sab leaves fetch karo
   const fetchLeaves = async () => {
     try {
-      const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/leave', {
-        method: 'GET',
-        headers: { 'authorization': token }
-      })
-      const result = await response.json()
-      setLeave(result.leave)
+      const data = await getLeaves()
+      setLeave(data)
     } catch (error) {
       console.log(error)
     }
@@ -30,20 +25,15 @@ const Leave = () => {
     fetchLeaves()
   }, [])
 
-  // Delete
-  const deleteLeave = async (id) => {
+  const handleDelete = async (id) => {
     try {
-      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/leave/${id}`, {
-        method: 'DELETE',
-        headers: { 'authorization': token }
-      })
+      await deleteLeaveApi(id)
       fetchLeaves()
     } catch (error) {
       console.log(error)
     }
   }
 
-  // Edit start
   const startEdit = (l) => {
     setEditingId(l._id)
     setEditData({ ...l })
@@ -54,17 +44,9 @@ const Leave = () => {
     setEditData({})
   }
 
-  // Save edit
   const saveEdit = async () => {
     try {
-      await fetch(`https://office-management-system-backend-m7u3.onrender.com/api/leave/${editingId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': token
-        },
-        body: JSON.stringify(editData)
-      })
+      await updateLeave(editingId, editData)
       setEditingId(null)
       setEditData({})
       fetchLeaves()
@@ -98,9 +80,7 @@ const Leave = () => {
             <TableRow key={l._id}>
               {editingId === l._id ? (
                 <>
-                  <TableCell>
-                    <Input value={editData.name} onChange={(e) => setEditData({ ...editData, name: e.target.value })} className='h-8 w-28' />
-                  </TableCell>
+                  <TableCell>{l.employee?.name || '—'}</TableCell>
                   <TableCell>
                     <Select value={editData.leaveType} onValueChange={(val) => setEditData({ ...editData, leaveType: val })}>
                       <SelectTrigger className='h-8 w-28'><SelectValue /></SelectTrigger>
@@ -133,7 +113,7 @@ const Leave = () => {
                 </>
               ) : (
                 <>
-                  <TableCell>{l.name}</TableCell>
+                  <TableCell>{l.employee?.name || '—'}</TableCell>
                   <TableCell>{l.leaveType}</TableCell>
                   <TableCell>{l.fromDate?.split('T')[0]}</TableCell>
                   <TableCell>{l.toDate?.split('T')[0]}</TableCell>
@@ -144,7 +124,7 @@ const Leave = () => {
                   </TableCell>
                   <TableCell className='flex gap-1 items-center'>
                     <Button variant='ghost' onClick={() => startEdit(l)}><Pencil size={14} className='text-blue-500' /></Button>
-                    <Button variant='ghost' onClick={() => deleteLeave(l._id)}><Trash2 size={14} className='text-red-500' /></Button>
+                    <Button variant='ghost' onClick={() => handleDelete(l._id)}><Trash2 size={14} className='text-red-500' /></Button>
                   </TableCell>
                 </>
               )}

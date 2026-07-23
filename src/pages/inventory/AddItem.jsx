@@ -2,36 +2,22 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+import { createItem } from '@/services/inventory.service'
+import { getErrorMessage } from '@/services/api'
 
 const AddItem = () => {
 
     const { register, handleSubmit, formState: { errors } } = useForm()
     const navigate = useNavigate()
-    const token = localStorage.getItem('token')
+
 
     const onSubmit = async (data) => {
         try {
-            const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/inventory', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': token
-                },
-                body: JSON.stringify(data)
-            })
-
-            const result = await response.json()
-
-            if (!response.ok) {
-                alert(result.message)
-                return
-            }
-
+            await createItem(data)
             navigate('/inventory')
-
         } catch (error) {
+            alert(getErrorMessage(error))
             console.log(error)
-            alert('Server se connection nahi!')
         }
     }
 

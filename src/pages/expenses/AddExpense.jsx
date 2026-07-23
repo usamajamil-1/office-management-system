@@ -2,38 +2,24 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+import { createExpense } from '@/services/expense.service'
+import { getErrorMessage } from '@/services/api'
 
 const AddExpense = () => {
 
   const { register, handleSubmit, formState: { errors } } = useForm()
   const navigate = useNavigate()
-  const token = localStorage.getItem('token')
+  
 
   const onSubmit = async (data) => {
-    try {
-      const response =await fetch('https://office-management-system-backend-m7u3.onrender.com/api/expense', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': token
-        },
-        body: JSON.stringify(data)
-      })
-
-      const result = await response.json()
-
-      if (!response.ok) {
-        alert(result.message)
-        return
-      }
-
-      navigate('/expenses')
-
-    } catch (error) {
-      console.log(error)
-      alert('Server se connection nahi!')
-    }
+  try {
+    await createExpense(data)
+    navigate('/expenses')
+  } catch (error) {
+    alert(getErrorMessage(error))
+    console.log(error)
   }
+}
 
   return (
     <div>

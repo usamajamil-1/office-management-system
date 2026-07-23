@@ -3,27 +3,25 @@ import { Input } from '@/components/ui/input'
 import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { useState, useEffect } from 'react'
+import { getApplications, createInterview } from '@/services/recruitment.service'
+import { getErrorMessage } from '@/services/api'
 
 const AddInterview = () => {
 
   const { register, handleSubmit, formState: { errors } } = useForm()
   const navigate = useNavigate()
-  const token = localStorage.getItem('token')
+  
 
   const [applications, setApplications] = useState([])
 
   const fetchApplications = async () => {
-    try {
-      const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/recruitment/applications', {
-        method: 'GET',
-        headers: { 'authorization': token }
-      })
-      const result = await response.json()
-      setApplications(result.applications || [])
-    } catch (error) {
-      console.log(error)
-    }
+  try {
+    const data = await getApplications()
+    setApplications(data || [])
+  } catch (error) {
+    console.log(error)
   }
+}
 
   useEffect(() => {
     fetchApplications()
@@ -31,30 +29,14 @@ const AddInterview = () => {
   }, [])
 
   const onSubmit = async (data) => {
-    try {
-      const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/recruitment/interviews', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': token
-        },
-        body: JSON.stringify(data)
-      })
-
-      const result = await response.json()
-
-      if (!response.ok) {
-        alert(result.message)
-        return
-      }
-
-      navigate('/recruitment')
-
-    } catch (error) {
-      console.log(error)
-      alert('Server se connection nahi!')
-    }
+  try {
+    await createInterview(data)
+    navigate('/recruitment')
+  } catch (error) {
+    alert(getErrorMessage(error))
+    console.log(error)
   }
+}
 
   return (
     <div>

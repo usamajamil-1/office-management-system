@@ -31,6 +31,7 @@ const Login = () => {
       localStorage.setItem('token', result.token)
       localStorage.setItem('role', result.user.role)
       localStorage.setItem('userEmail', result.user.email)
+      localStorage.setItem('employeeId', result.user._id)
 
       navigate('/dashboard')
 
