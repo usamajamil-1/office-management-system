@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Mail, Phone, Building2, Briefcase, MapPin, Clock } from 'lucide-react'
+import { getProfile } from '@/services/profile.service'
 
 const Profile = () => {
 
   const [employee, setEmployee] = useState(null)
-  const token = localStorage.getItem('token')
+
 
   const fetchProfile = async () => {
     try {
-      const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/profile', {
-        method: 'GET',
-        headers: { 'authorization': token }
-      })
-      const result = await response.json()
-      setEmployee(result.employee)
+      const data = await getProfile()
+      setEmployee(data)
     } catch (error) {
       console.log(error)
     }

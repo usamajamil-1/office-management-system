@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { getProfile, updateProfile, changePassword } from '@/services/profile.service'
+import { getErrorMessage } from '@/services/api'
 
 const AccountSettings = () => {
 
-    const token = localStorage.getItem('token')
+
 
     const [form, setForm] = useState({
         name: '',
@@ -22,17 +24,13 @@ const AccountSettings = () => {
 
     const fetchProfile = async () => {
         try {
-            const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/profile', {
-                method: 'GET',
-                headers: { 'authorization': token }
-            })
-            const result = await response.json()
+            const data = await getProfile()
             setForm({
-                name: result.employee.name || '',
-                email: result.employee.email || '',
-                phone: result.employee.phone || '',
-                department: result.employee.department || '',
-                address: result.employee.address || '',
+                name: data.name || '',
+                email: data.email || '',
+                phone: data.phone || '',
+                department: data.department || '',
+                address: data.address || '',
             })
         } catch (error) {
             console.log(error)
@@ -54,26 +52,11 @@ const AccountSettings = () => {
 
     const handleSave = async () => {
         try {
-            const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/profile', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': token
-                },
-                body: JSON.stringify(form)
-            })
-
-            const result = await response.json()
-
-            if (!response.ok) {
-                alert(result.message)
-                return
-            }
-
+            await updateProfile(form)
             alert('Settings saved!')
         } catch (error) {
+            alert(getErrorMessage(error))
             console.log(error)
-            alert('Server se connection nahi!')
         }
     }
 
@@ -84,27 +67,12 @@ const AccountSettings = () => {
         }
 
         try {
-            const response = await fetch('https://office-management-system-backend-m7u3.onrender.com/api/profile/change-password', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': token
-                },
-                body: JSON.stringify(passwordForm)
-            })
-
-            const result = await response.json()
-
-            if (!response.ok) {
-                alert(result.message)
-                return
-            }
-
+            await changePassword(passwordForm)
             alert('Password changed!')
             setPasswordForm({ currentPassword: '', newPassword: '' })
         } catch (error) {
+            alert(getErrorMessage(error))
             console.log(error)
-            alert('Server se connection nahi!')
         }
     }
 
