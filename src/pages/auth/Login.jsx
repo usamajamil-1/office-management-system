@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import socket from '../../socket';
+import api from '../../api';
 
 const Login = () => {
 
@@ -12,42 +13,33 @@ const Login = () => {
   const { register, handleSubmit } = useForm();
 
   const onSubmit = async (data) => {
-    try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      });
+  try {
+    const { data: result } = await api.post('/auth/login', data);
 
-      const result = await response.json();
+    // Save login data
+    localStorage.setItem('token', result.token);
+    localStorage.setItem('role', result.user.role);
+    localStorage.setItem('userEmail', result.user.email);
+    localStorage.setItem('employeeId', result.user._id);
 
-      if (!response.ok) {
-        alert(result.message);
-        return;
-      }
+    // Connect socket
+    socket.connect();
 
-      // Save login data
-      localStorage.setItem('token', result.token);
-      localStorage.setItem('role', result.user.role);
-      localStorage.setItem('userEmail', result.user.email);
-      localStorage.setItem('employeeId', result.user._id);
+    // Join employee room
+    socket.emit("joinRoom", result.user._id);
 
-      // Connect socket
-      socket.connect();
+    // Go to dashboard
+    navigate('/dashboard');
 
-      // Join employee room
-      socket.emit("joinRoom", result.user._id);
+  } catch (error) {
+    console.error(error);
 
-      // Go to dashboard
-      navigate('/dashboard');
-
-    } catch (error) {
-      console.error(error);
-      alert('Server se connection nahi ho raha!');
-    }
-  };
+    alert(
+      error.response?.data?.message ||
+      'Server se connection nahi ho raha!'
+    );
+  }
+};
 
   return (
     <div className='flex justify-center items-center min-h-screen bg-gray-50'>
