@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { Button } from '../components/ui/button'
 import { Bell } from 'lucide-react'
 import { User,ListTodo,Settings,ChevronDown } from 'lucide-react'
+import socket from '../socket'
 
 const Navbar = ({ onMenuClick }) => {
     const navigate = useNavigate()
@@ -60,6 +61,9 @@ const Navbar = ({ onMenuClick }) => {
                     <DropdownMenuItem  onClick={()=> navigate('/myTasks')} className='font-extralight'> <ListTodo/> My Task </DropdownMenuItem>
                     <DropdownMenuItem  onClick={()=> navigate('/setting')} className='font-extralight'> <Settings/> Account Setting </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => {
+                        socket.disconnect()
+                        localStorage.removeItem("token")
+                        localStorage.removeItem("employeeId")
                         localStorage.removeItem("isLoggedIn")
                         localStorage.removeItem('userEmail')
                         localStorage.removeItem('role')

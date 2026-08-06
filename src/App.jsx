@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useEffect } from 'react'
+import socket from './socket'
 import Login from './pages/auth/Login'
 import Dashboard from './pages/dashboard/Dashboard'
 import Employees from './pages/employees/Employees'
@@ -34,9 +35,29 @@ import AddInterview from './pages/recruitment/AddInterview'
 function App() {
 
   useEffect(() => {
-    fetch('https://office-management-system-backend-m7u3.onrender.com')
-      .catch(() => {});
-  }, []);
+    const token = localStorage.getItem('token')
+    const employeeId = localStorage.getItem('employeeId')
+
+    if (!token || !employeeId) return
+
+    // Rejoin the employee's room every time a connection is (re)established -
+    // covers first load, page refresh, and any auto-reconnect after a drop.
+    const handleConnect = () => {
+      socket.emit('joinRoom', employeeId)
+    }
+
+    socket.on('connect', handleConnect)
+
+    if (!socket.connected) {
+      socket.connect()
+    } else {
+      handleConnect()
+    }
+
+    return () => {
+      socket.off('connect', handleConnect)
+    }
+  }, [])
 
   return (
 
