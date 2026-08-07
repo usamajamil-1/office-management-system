@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import socket from '../../socket';
-import api from '../../api';
+import api from '../../services/api';
 
 const Login = () => {
 
