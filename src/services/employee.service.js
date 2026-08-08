@@ -19,3 +19,8 @@ export const deleteEmployee = async (id) => {
   const response = await api.delete(`/employees/${id}`)
   return response.data
 }
+
+export const getAssignableEmployees = async () => {
+  const response = await api.get('/employees/assignable')
+  return response.data.employee
+}

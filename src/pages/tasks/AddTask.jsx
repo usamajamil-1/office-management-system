@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { useState, useEffect } from 'react'
 import { createTask } from '@/services/task.service'
-import { getEmployees } from '@/services/employee.service'
 import { getErrorMessage } from '@/services/api'
+import { getAssignableEmployees } from '@/services/employee.service'
 
 const AddTask = () => {
 
@@ -14,8 +14,8 @@ const AddTask = () => {
   const [employees, setEmployees] = useState([])
 
   useEffect(() => {
-    getEmployees().then(setEmployees).catch(console.log)
-  }, [])
+  getAssignableEmployees().then(setEmployees).catch(console.log)
+}, [])
 
   const navigate = useNavigate()
 
